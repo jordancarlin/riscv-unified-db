@@ -4,6 +4,7 @@ require "udb/resolver"
 
 directory "#{$root}/gen/go"
 directory "#{$root}/gen/c_header"
+directory "#{$root}/gen/sv_header"
 
 namespace :gen do
   desc <<~DESC
@@ -56,5 +57,31 @@ namespace :gen do
     # Run the C header generator script using the same Python environment
     # The script generates encoding.h for inclusion in C programs
     sh "#{$root}/.home/.venv/bin/python3 #{$root}/backends/generators/c_header/generate_encoding.py --inst-dir=#{inst_dir} --csr-dir=#{csr_dir} --ext-dir=#{ext_dir} --output=#{output_dir}encoding.out.h --include-all"
+  end
+
+  desc <<~DESC
+    Generate SystemVerilog encoding header from RISC-V instruction and CSR definitions
+
+    Options:
+     * CONFIG - Configuration name (defaults to "_")
+     * OUTPUT_DIR - Output directory for generated SystemVerilog header (defaults to "#{$root}/gen/sv_header")
+  DESC
+  task sv_header: "#{$root}/gen/sv_header" do
+    config_name = ENV["CONFIG"] || "_"
+    output_dir = ENV["OUTPUT_DIR"] || "#{$root}/gen/sv_header/"
+
+    # Ensure the output directory exists
+    FileUtils.mkdir_p output_dir
+
+    # Get the arch paths based on the config
+    resolver = Udb::Resolver.new
+    cfg_arch = resolver.cfg_arch_for(config_name)
+    inst_dir = cfg_arch.path / "inst"
+    csr_dir = cfg_arch.path / "csr"
+    ext_dir = cfg_arch.path / "ext"
+
+    # Run the C header generator script using the same Python environment
+    # The script generates encoding.h for inclusion in C programs
+    sh "#{$root}/.home/.venv/bin/python3 #{$root}/backends/generators/sv_header/generate_sv_header.py --inst-dir=#{inst_dir} --csr-dir=#{csr_dir} --output=#{output_dir}RISCV_decode_pkg.svh --include-all"
   end
 end
