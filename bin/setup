@@ -6,34 +6,6 @@ cd $ROOT
 
 CONTAINER_TAG=`cat ${ROOT}/bin/.container-tag`
 
-# Parse command line arguments
-PRESERVE_CONFIG=0
-
-# Only parse arguments if this script is being run directly (not sourced)
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-  for arg in "$@"; do
-    case $arg in
-      --preserve-config)
-        PRESERVE_CONFIG=1
-        shift
-        ;;
-      --help|-h)
-        echo "Usage: $0 [OPTIONS]"
-        echo ""
-        echo "Options:"
-        echo "  --preserve-config    Only create .bundle/config if missing (default: always recreate)"
-        echo "  --help, -h           Show this help message"
-        exit 0
-        ;;
-      *)
-        echo "Unknown option: $arg"
-        echo "Use --help for usage information"
-        exit 1
-        ;;
-    esac
-  done
-fi
-
 # Supported container types:
 #
 # = devcontainer
@@ -170,54 +142,11 @@ if [ ! -d $ROOT/.home ]; then
     mkdir $ROOT/.home
 fi
 
-if [ $PRESERVE_CONFIG -eq 0 ] || [ ! -f $ROOT/.bundle/config ]; then
-    if [ -f $ROOT/.bundle/config ] && [ $PRESERVE_CONFIG -eq 0 ]; then
-        echo "Recreating bundle config..."
-    fi
-    OLDDIR=$PWD
-    cd $ROOT
-    ${RUN} bundle config set --local path ${ROOT}/.home/.gems
-    ${RUN} bundle config set --local cache_path ${ROOT}/.home/.cache
-    ${RUN} bundle config set --local with development
-    cd $OLDDIR
-fi
-
-if [ ! -d $ROOT/.home/.gems ]; then
-    OLDDIR=$PWD
-    cd $ROOT
-    ${RUN} bundle install
-    cd $OLDDIR
-fi
-
+# Initialize git submodules
 if [ ! -f $ROOT/ext/rbi-central/README.md ]; then
     git submodule update --init ext/rbi-central
 fi
 
-if [ ! -d $ROOT/.home/.venv ]; then
-    ${RUN} /usr/bin/python3 -m venv ${ROOT}/.home/.venv
-fi
-
-source ${ROOT}/.home/.venv/bin/activate
-
-if [ ! -f ${ROOT}/.home/.venv/bin/pre-commit ]; then
-    ${RUN} ${ROOT}/.home/.venv/bin/pip install -r requirements.txt
-fi
-
-# if [ ! -f $ROOT/ext/riscv-opcodes/README.md ]; then
-#   git submodule update --init ext/riscv-opcodes
-# fi
-
-if [[ ! -z "$DEVELOPMENT" && $DEVELOPMENT -eq 1 ]]; then
-    if [ ! -d "${ROOT}/.home/.yard/gem_index" ]; then
-        ${RUN} bundle exec --gemfile ${ROOT}/Gemfile yard config --gem-install-yri
-        ${RUN} bundle exec --gemfile ${ROOT}/Gemfile yard gems
-        touch ${ROOT}/.stamps/dev_gems
-    fi
-fi
-
-if [ ! -d ${ROOT}/node_modules ]; then
-    ${RUN} npm i
-fi
 
 if [ "${CONTAINER_TYPE}" == "devcontainer" ]; then
     BUNDLE="bundle"
@@ -226,8 +155,8 @@ if [ "${CONTAINER_TYPE}" == "devcontainer" ]; then
     NPM="npm"
     NPX="npx"
     NODE="node"
-    PYTHON="${ROOT}/.home/.venv/bin/python3"
-    PIP="${ROOT}/.home/.venv/bin/pip"
+    PYTHON="/opt/venv/bin/python3"
+    PIP="/opt/venv/bin/pip"
     BASH="bash"
     GPP="g++"
     GDB="gdb"
@@ -241,8 +170,8 @@ elif [ "${CONTAINER_TYPE}" == "docker" -o "${CONTAINER_TYPE}" == "podman" ]; the
     NPM="${CONTAINER_BASE} npm"
     NPX="${CONTAINER_BASE} npx"
     NODE="${CONTAINER_BASE} node"
-    PYTHON="${CONTAINER_BASE} ${ROOT}/.home/.venv/bin/python3"
-    PIP="${CONTAINER_BASE} ${ROOT}/.home/.venv/bin/pip"
+    PYTHON="${CONTAINER_BASE} /opt/venv/bin/python3"
+    PIP="${CONTAINER_BASE} /opt/venv/bin/pip"
     BASH="${CONTAINER_BASE} bash"
     GPP="${CONTAINER_BASE} g++"
     GDB="${CONTAINER_BASE} gdb"
@@ -256,8 +185,8 @@ elif [ "${CONTAINER_TYPE}" == "singularity" ]; then
     NPM="singularity run ${HOME_OPT} ${CONTAINER_PATH} npm"
     NPX="singularity run ${HOME_OPT} ${CONTAINER_PATH} npx"
     NODE="singularity run ${HOME_OPT} ${CONTAINER_PATH} node"
-    PYTHON="singularity run ${HOME_OPT} ${CONTAINER_PATH} ${ROOT}/.home/.venv/bin/python3"
-    PIP="singularity run ${HOME_OPT} ${CONTAINER_PATH} ${ROOT}/.home/.venv/bin/pip"
+    PYTHON="singularity run ${HOME_OPT} ${CONTAINER_PATH} /opt/venv/bin/python3"
+    PIP="singularity run ${HOME_OPT} ${CONTAINER_PATH} /opt/venv/bin/pip"
     BASH="singularity run ${HOME_OPT} ${CONTAINER_PATH} bash"
     GPP="singularity run ${HOME_OPT} ${CONTAINER_PATH} g++"
     GDB="singularity run ${HOME_OPT} ${CONTAINER_PATH} gdb"

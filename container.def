@@ -1,11 +1,6 @@
 Bootstrap: docker
 From: ubuntu:24.04
 
-# %files
-
-#   Gemfile $HOME/
-#   package.json $HOME/
-
 %post
   export DEBIAN_FRONTEND=noninteractive
 
@@ -41,13 +36,41 @@ From: ubuntu:24.04
     ruby-dev \
     shellcheck
 
-# cleanup
+  # cleanup
   apt-get clean autoclean
   apt-get autoremove -y
   rm -rf /var/lib/{apt, dpkg, cache, log}
 
-  # cd $HOME
-  # bundle install
+%files
+  Gemfile /tmp/
+  Gemfile.lock /tmp/
+  requirements.txt /tmp/
+  package.json /tmp/
+  package-lock.json /tmp/
 
-  # npm i wavedrom-cli
-  # npm i i -E  @antora/cli@3.1 @antora/site-generator@3.1 @antora/lunr-extension asciidoctor-kroki
+%post
+  # Install Ruby gems
+  cd /tmp
+  bundle config set --global path /opt/gems
+  bundle config set --global jobs $(nproc)
+  bundle config set --global with development
+  bundle install
+  rm -f /tmp/Gemfile /tmp/Gemfile.lock
+
+  # Install Python packages in a virtual environment
+  /usr/bin/python3 -m venv /opt/venv
+  /opt/venv/bin/pip install --no-cache-dir -r /tmp/requirements.txt
+  rm -f /tmp/requirements.txt
+
+  # Install Node.js packages
+  mkdir -p /opt/npm
+  cp /tmp/package.json /tmp/package-lock.json /opt/npm/
+  cd /opt/npm
+  npm install
+  rm -f /opt/npm/package.json /opt/npm/package-lock.json
+
+%environment
+  export GEM_HOME=/opt/gems
+  export PATH=/opt/gems/bin:/opt/venv/bin:/opt/npm/node_modules/.bin:$PATH
+  export VIRTUAL_ENV=/opt/venv
+  export NODE_PATH=/opt/npm/node_modules
