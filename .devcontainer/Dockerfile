@@ -47,6 +47,7 @@ RUN cd /tmp && \
     bundle config set --global path /opt/gems && \
     bundle config set --global jobs $(nproc) && \
     bundle config set --global with development && \
+    bundle config set --global without local && \
     bundle install && \
     rm -f /tmp/Gemfile /tmp/Gemfile.lock
 
