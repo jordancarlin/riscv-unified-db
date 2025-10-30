@@ -1,4 +1,4 @@
-pre_commit==4.0.1
+pre_commit==4.3.0
 jsonschema==4.23.0
 tqdm==4.67.1
 reuse==5.0.2
