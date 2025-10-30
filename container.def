@@ -56,6 +56,11 @@ From: ubuntu:24.04
   /usr/bin/npm ci
   rm /opt/node/package.json /opt/node/package-lock.json
 
+  # Install npm packages globally in the container
+  cd /opt/node
+  /usr/bin/npm ci
+  rm /opt/node/package.json /opt/node/package-lock.json
+
   # cd $HOME
   # bundle install
 
