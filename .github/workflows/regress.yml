@@ -164,7 +164,7 @@ jobs:
       - name: Show riscv.json output
         run: ls -l ext/llvm-project/riscv.json
       - name: Upload RISC-V JSON as Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: riscv-json
           path: ext/llvm-project/riscv.json
