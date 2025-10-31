@@ -42,7 +42,7 @@ jobs:
       - name: run reuse
         run: ./bin/reuse spdx -o reuse_bom.txt
       - name: Upload Reuse Manifest
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: (github.event_name == 'push') && (github.ref_name == 'main')
         with:
           name: reuse-manifest
@@ -59,7 +59,7 @@ jobs:
       - name: Generate UDB API Docs
         run: ./do gen:udb:api_doc
       - name: Upload UDB API Docs
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: (github.event_name == 'push') && (github.ref_name == 'main')
         with:
           name: udb-api
@@ -79,7 +79,7 @@ jobs:
       - name: Tar unconfig
         run: tar czf gen/resolved_spec/_resolved_spec.tar.gz gen/resolved_spec/_ && mv gen/resolved_spec/_resolved_spec.tar.gz gen/resolved_spec/_/resolved_spec.tar.gz
       - name: Upload resolved spec
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: (github.event_name == 'push') && (github.ref_name == 'main')
         with:
           name: resolved-spec
@@ -97,7 +97,7 @@ jobs:
       - name: Generate ISA Explorer CSR
         run: ./do gen:isa_explorer_browser_csr
       - name: Upload ISA Explorer CSR
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: (github.event_name == 'push') && (github.ref_name == 'main')
         with:
           name: isa-explorer-csr
@@ -114,7 +114,7 @@ jobs:
       - name: Generate ISA Explorer Extension
         run: ./do gen:isa_explorer_browser_ext
       - name: Upload ISA Explorer Extension
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: (github.event_name == 'push') && (github.ref_name == 'main')
         with:
           name: isa-explorer-ext
@@ -131,7 +131,7 @@ jobs:
       - name: Generate ISA Explorer Instructions
         run: ./do gen:isa_explorer_browser_inst
       - name: Upload ISA Explorer Instructions
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: (github.event_name == 'push') && (github.ref_name == 'main')
         with:
           name: isa-explorer-inst
@@ -148,7 +148,7 @@ jobs:
       - name: Generate ISA Explorer Spreadsheet
         run: ./do gen:isa_explorer_spreadsheet
       - name: Upload ISA Explorer Spreadsheet
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: (github.event_name == 'push') && (github.ref_name == 'main')
         with:
           name: isa-explorer-spreadsheet
@@ -167,7 +167,7 @@ jobs:
       - name: Generate HTML ISA manual
         run: ./do gen:html_manual
       - name: Upload HTML ISA manual
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: (github.event_name == 'push') && (github.ref_name == 'main')
         with:
           name: isa-html-manual
@@ -183,7 +183,7 @@ jobs:
       - name: Generate HTML ISA manual for a config
         run: ./do gen:html[example_rv64_with_overlay]
       - name: Upload HTML ISA manual for a config
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: (github.event_name == 'push') && (github.ref_name == 'main')
         with:
           name: cfg-html-manual
@@ -199,7 +199,7 @@ jobs:
       - name: Generate instruction appendix
         run: ./do gen:instruction_appendix
       - name: Upload instruction appendix
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: (github.event_name == 'push') && (github.ref_name == 'main')
         with:
           name: inst-appendix
@@ -215,7 +215,7 @@ jobs:
       - name: Generate RVI20
         run: ./do gen:profile_release_pdf[RVI20]
       - name: Upload RVI20
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: (github.event_name == 'push') && (github.ref_name == 'main')
         with:
           name: rvi20
@@ -231,7 +231,7 @@ jobs:
       - name: Generate RVA20
         run: ./do gen:profile_release_pdf[RVA20]
       - name: Upload RVA20
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: (github.event_name == 'push') && (github.ref_name == 'main')
         with:
           name: rva20
@@ -247,7 +247,7 @@ jobs:
       - name: Generate RVA22
         run: ./do gen:profile_release_pdf[RVA22]
       - name: Upload RVA22
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: (github.event_name == 'push') && (github.ref_name == 'main')
         with:
           name: rva22
@@ -263,7 +263,7 @@ jobs:
       - name: Generate RVA23
         run: ./do gen:profile_release_pdf[RVA23]
       - name: Upload RVA23
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: (github.event_name == 'push') && (github.ref_name == 'main')
         with:
           name: rva23
@@ -279,7 +279,7 @@ jobs:
       - name: Generate RVB23
         run: ./do gen:profile_release_pdf[RVB23]
       - name: Upload RVB23
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: (github.event_name == 'push') && (github.ref_name == 'main')
         with:
           name: rvb23
@@ -295,7 +295,7 @@ jobs:
       - name: Generate AC100 CRD
         run: ./do gen:proc_crd_pdf[AC100]
       - name: Upload AC100 CRD
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: (github.event_name == 'push') && (github.ref_name == 'main')
         with:
           name: ac100-crd
@@ -311,7 +311,7 @@ jobs:
       - name: Generate AC200 CRD
         run: ./do gen:proc_crd_pdf[AC200]
       - name: Upload AC200 CRD
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: (github.event_name == 'push') && (github.ref_name == 'main')
         with:
           name: ac200-crd
@@ -327,7 +327,7 @@ jobs:
       - name: Generate RVI20-32 CRD
         run: ./do gen:proc_crd_pdf[RVI20-32]
       - name: Upload RVI20-32 CRD
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: (github.event_name == 'push') && (github.ref_name == 'main')
         with:
           name: rvi20-32-crd
@@ -343,7 +343,7 @@ jobs:
       - name: Generate RVI20-64 CRD
         run: ./do gen:proc_crd_pdf[RVI20-64]
       - name: Upload RVI20-64 CRD
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: (github.event_name == 'push') && (github.ref_name == 'main')
         with:
           name: rvi20-64-crd
@@ -359,7 +359,7 @@ jobs:
       - name: Generate MC100-32 CRD
         run: ./do gen:proc_crd_pdf[MC100-32]
       - name: Upload MC100-32 CRD
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: (github.event_name == 'push') && (github.ref_name == 'main')
         with:
           name: mc100-32-crd
@@ -375,7 +375,7 @@ jobs:
       - name: Generate MC100-64 CRD
         run: ./do gen:proc_crd_pdf[MC100-64]
       - name: Upload MC100-64 CRD
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: (github.event_name == 'push') && (github.ref_name == 'main')
         with:
           name: mc100-64-crd
@@ -391,7 +391,7 @@ jobs:
       - name: Generate MC200-32 CRD
         run: ./do gen:proc_crd_pdf[MC200-32]
       - name: Upload MC200-32 CRD
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: (github.event_name == 'push') && (github.ref_name == 'main')
         with:
           name: mc200-32-crd
@@ -407,7 +407,7 @@ jobs:
       - name: Generate MC200-64 CRD
         run: ./do gen:proc_crd_pdf[MC200-64]
       - name: Upload MC200-64 CRD
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: (github.event_name == 'push') && (github.ref_name == 'main')
         with:
           name: mc200-64-crd
@@ -423,7 +423,7 @@ jobs:
       - name: Generate MC300-32 CRD
         run: ./do gen:proc_crd_pdf[MC300-32]
       - name: Upload MC300-32 CRD
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: (github.event_name == 'push') && (github.ref_name == 'main')
         with:
           name: mc300-32-crd
@@ -439,7 +439,7 @@ jobs:
       - name: Generate MC300-64 CRD
         run: ./do gen:proc_crd_pdf[MC300-64]
       - name: Upload MC300-64 CRD
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: (github.event_name == 'push') && (github.ref_name == 'main')
         with:
           name: mc300-64-crd
@@ -455,7 +455,7 @@ jobs:
       - name: Generate RVI20-32 CTP
         run: ./do gen:proc_ctp_pdf[RVI20-32]
       - name: Upload RVI20-32 CTP
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: (github.event_name == 'push') && (github.ref_name == 'main')
         with:
           name: rvi20-32-ctp
@@ -471,7 +471,7 @@ jobs:
       - name: Generate RVI20-64 CTP
         run: ./do gen:proc_ctp_pdf[RVI20-64]
       - name: Upload RVI20-64 CTP
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: (github.event_name == 'push') && (github.ref_name == 'main')
         with:
           name: rvi20-64-ctp
@@ -487,7 +487,7 @@ jobs:
       - name: Generate MC100-32 CTP
         run: ./do gen:proc_ctp_pdf[MC100-32]
       - name: Upload MC100-32 CTP
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: (github.event_name == 'push') && (github.ref_name == 'main')
         with:
           name: mc100-32-ctp
@@ -503,7 +503,7 @@ jobs:
       - name: Build IDL doc
         run: ./bin/bundle exec asciidoctor -r idl_highlighter -a toc=left -a source-highlighter=rouge -o idl.html doc/idl.adoc
       - name: Upload IDL Doc
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: (github.event_name == 'push') && (github.ref_name == 'main')
         with:
           name: idl-doc
