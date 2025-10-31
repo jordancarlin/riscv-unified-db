@@ -13,7 +13,7 @@ jobs:
   regress-pre-commit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-python@v5
       - uses: pre-commit/action@v3.0.1
   regress-smoke:
@@ -23,7 +23,7 @@ jobs:
       SINGULARITY: 1
     steps:
       - name: Clone Github Repo Action
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Get current LLVM submodule commit SHA
         id: get-llvm-sha
         run: echo "LLVM_SHA=$(git ls-tree HEAD ext/llvm-project | awk '{print $3}')" >> $GITHUB_ENV
@@ -52,7 +52,7 @@ jobs:
       SINGULARITY: 1
     steps:
       - name: Clone Github Repo Action
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: singularity setup
         uses: ./.github/actions/singularity-setup
       - name: Generate HTML ISA manual
@@ -63,7 +63,7 @@ jobs:
       SINGULARITY: 1
     steps:
       - name: Clone Github Repo Action
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: singularity setup
         uses: ./.github/actions/singularity-setup
       - name: Generate instruction appendix asciidoc
@@ -76,7 +76,7 @@ jobs:
       SINGULARITY: 1
     steps:
       - name: Clone Github Repo Action
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: singularity setup
         uses: ./.github/actions/singularity-setup
       - name: Generate HTML ISA manual
@@ -90,7 +90,7 @@ jobs:
       PSEUDO: both
     steps:
       - name: Clone Github Repo Action
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: singularity setup
         uses: ./.github/actions/singularity-setup
       - name: Generate extension PDF
@@ -101,7 +101,7 @@ jobs:
       SINGULARITY: 1
     steps:
       - name: Clone Github Repo Action
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: singularity setup
         uses: ./.github/actions/singularity-setup
       - name: Generate extension PDF
@@ -112,7 +112,7 @@ jobs:
       SINGULARITY: 1
     steps:
       - name: Clone Github Repo Action
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: singularity setup
         uses: ./.github/actions/singularity-setup
       - name: Generate extension PDF
@@ -121,7 +121,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository (no submodules, shallow fetch)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           submodules: false
           fetch-depth: 1
@@ -174,7 +174,7 @@ jobs:
       SINGULARITY: 1
     steps:
       - name: Clone Github Repo Action
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: singularity setup
         uses: ./.github/actions/singularity-setup
       - name: Generate Go code
@@ -185,7 +185,7 @@ jobs:
       SINGULARITY: 1
     steps:
       - name: Clone Github Repo Action
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: singularity setup
         uses: ./.github/actions/singularity-setup
       - name: Generate c_header code
@@ -196,7 +196,7 @@ jobs:
       SINGULARITY: 1
     steps:
       - name: Clone Github Repo Action
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: singularity setup
         uses: ./.github/actions/singularity-setup
       - name: Run cpp unit tests
@@ -207,7 +207,7 @@ jobs:
       SINGULARITY: 1
     steps:
       - name: Clone Github Repo Action
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: singularity setup
         uses: ./.github/actions/singularity-setup
       - name: Run riscv-tests
@@ -218,7 +218,7 @@ jobs:
       SINGULARITY: 1
     steps:
       - name: Clone Github Repo Action
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: singularity setup
         uses: ./.github/actions/singularity-setup
       - name: Run cpp unit tests
