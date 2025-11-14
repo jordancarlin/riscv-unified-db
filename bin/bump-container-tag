@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+# SPDX-License-Identifier: MIT
+# Copyright (C) 2024 RISC-V International
+
+# Script to increment the container tag version
+# Used by Renovate to bump container version on dependency updates
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TAG_FILE="${SCRIPT_DIR}/.container-tag"
+
+if [ ! -f "$TAG_FILE" ]; then
+    echo "Error: $TAG_FILE not found" >&2
+    exit 1
+fi
+
+# Read current version
+CURRENT=$(cat "$TAG_FILE")
+
+# Split version into major and minor parts
+MAJOR=$(echo "$CURRENT" | cut -d'.' -f1)
+MINOR=$(echo "$CURRENT" | cut -d'.' -f2)
+
+# Increment minor version
+MINOR=$((MINOR + 1))
+
+# Construct new version
+NEW="${MAJOR}.${MINOR}"
+
+# Write new version
+echo "$NEW" > "$TAG_FILE"
+
+echo "Bumped container tag from $CURRENT to $NEW"
