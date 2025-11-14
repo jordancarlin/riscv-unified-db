@@ -19,7 +19,7 @@
           "name": "Updating container version",
           "filePatterns": ["bin/.container-tag"],
           "bumpType": "minor",
-          "matchStrings": ["(?<version>\\d+\\.\\d+)"]
+          "matchStrings": ["(?<version>[^\\s]+)"]
         }
       ]
     },
