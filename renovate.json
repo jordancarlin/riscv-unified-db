@@ -1,10 +1,18 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
-  "allowedPostUpgradeCommands": ["^bin/bump-container-tag$"],
-  "postUpgradeTasks": {
-    "commands": ["bin/bump-container-tag"],
-    "fileFilters": ["bin/.container-tag"],
-    "executionMode": "update"
-  }
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true
+    }
+  ],
+  "bumpVersions": [
+    {
+      "name": "Updating container version",
+      "filePatterns": ["bin/.container-tag"],
+      "bumpType": "minor",
+      "matchStrings": ["^(?<version>.+)$"]
+    }
+  ]
 }
