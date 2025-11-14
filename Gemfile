@@ -11,7 +11,7 @@ gem "udb", path: "tools/ruby-gems/udb"
 source "https://rubygems.org"
 
 # gem "activesupport"
-gem "asciidoctor-diagram", "~> 2.2"
+gem "asciidoctor-diagram", "~> 3.0"
 gem "asciidoctor-pdf"
 gem "base64"
 gem "bigdecimal"
