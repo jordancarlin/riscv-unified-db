@@ -7,14 +7,32 @@
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "automerge": true
-    }
-  ],
-  "bumpVersions": [
+    },
     {
-      "name": "Updating container version",
-      "filePatterns": ["bin/.container-tag"],
-      "bumpType": "minor",
-      "matchStrings": ["(?<version>\\d+\\.\\d+)"]
+      "matchFileNames": [
+        "package.json",
+        "package-lock.json",
+        "requirements.txt"
+      ],
+      "bumpVersions": [
+        {
+          "name": "Updating container version",
+          "filePatterns": ["bin/.container-tag"],
+          "bumpType": "minor",
+          "matchStrings": ["(?<version>\\d+\\.\\d+)"]
+        }
+      ]
+    },
+    {
+      "matchFileNames": [".devcontainer/Dockerfile"],
+      "bumpVersions": [
+        {
+          "name": "Updating container version",
+          "filePatterns": ["bin/.container-tag"],
+          "bumpType": "major",
+          "matchStrings": ["(?<version>\\d+\\.\\d+)"]
+        }
+      ]
     }
   ],
   "logLevelRemap": [
@@ -22,5 +40,11 @@
       "matchMessage": "/bumpVersions/",
       "newLogLevel": "debug"
     }
-  ]
+  ],
+  "git-submodules": {
+    "enabled": true
+  },
+  "pre-commit": {
+    "enabled": true
+  }
 }
