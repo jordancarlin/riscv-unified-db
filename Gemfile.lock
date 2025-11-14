@@ -299,9 +299,9 @@ GEM
     unicode-emoji (4.0.4)
     uri (1.0.3)
     webrick (1.9.1)
-    write_xlsx (1.12.1)
+    write_xlsx (1.12.3)
       nkf
-      rubyzip (>= 1.0.0)
+      rubyzip (>= 2.4.0, < 4.0)
     yard (0.9.37)
     yard-solargraph (0.1.0)
       yard (~> 0.9)
