@@ -1,45 +1,30 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
+  "extends": [
+    "config:best-practices",
+    ":automergeAll"
+  ],
   "labels": ["dependencies"],
-  "configMigration": true,
+  "lockFileMaintenance": {
+    "enabled": true
+  },
   "packageRules": [
-    {
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "automerge": true
-    },
     {
       "matchFileNames": [
         "package.json",
         "package-lock.json",
-        "requirements.txt"
+        "requirements.txt",
+        ".devcontainer/Dockerfile"
       ],
       "bumpVersions": [
         {
-          "name": "Updating container version",
+          "name": "Update container version",
           "filePatterns": ["bin/.container-tag"],
           "bumpType": "minor",
           "matchStrings": ["(?<version>[^\\s]+)"]
         }
       ]
     },
-    {
-      "matchFileNames": [".devcontainer/Dockerfile"],
-      "bumpVersions": [
-        {
-          "name": "Updating container version",
-          "filePatterns": ["bin/.container-tag"],
-          "bumpType": "major",
-          "matchStrings": ["(?<version>\\d+\\.\\d+)"]
-        }
-      ]
-    }
-  ],
-  "logLevelRemap": [
-    {
-      "matchMessage": "/bumpVersions/",
-      "newLogLevel": "debug"
-    }
   ],
   "git-submodules": {
     "enabled": true
