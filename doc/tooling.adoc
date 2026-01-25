@@ -39,12 +39,69 @@ For IDE compatibility, the following legacy version files are still supported:
 
 Mise is configured with `legacy_version_file = true` to read these files if present.
 
+== Mise Tasks
+
+Mise tasks provide a simplified interface to common commands. All tasks automatically
+run inside the container (docker/podman/singularity) using the `bin/container-run` shim.
+
+=== Listing Tasks
+
+[source,bash]
+----
+mise tasks          # List all available tasks
+mise run --help     # Help on running tasks
+----
+
+=== Common Tasks
+
+[source,bash]
+----
+# Testing
+mise run test               # Run smoke tests
+mise run test:regress       # Run full regression tests
+mise run test:unit          # Run unit tests
+mise run test:sorbet        # Type-check Ruby code
+
+# Generation
+mise run gen:arch           # Generate architecture files
+mise run gen:cfg            # Generate config files for profiles
+mise run portfolios         # Generate all PDF artifacts
+
+# Tools (run inside container)
+mise run ruby -- script.rb  # Run Ruby script
+mise run python -- script.py # Run Python script
+mise run rake -- taskname   # Run Rake task
+
+# Utilities
+mise run clean              # Clean generated files
+mise run build_container    # Build container image
+mise run pre-commit         # Run pre-commit hooks
+----
+
+=== How Container Tasks Work
+
+Tasks that need the container use `bin/container-run` as a prefix:
+
+[source,toml]
+----
+[tasks.test]
+run = "./bin/container-run bundle exec rake test:smoke"
+----
+
+The `bin/container-run` script:
+
+1. Sources `bin/setup` to detect the container type (docker/podman/singularity)
+2. Wraps the command with the appropriate container runtime prefix
+3. Runs the command inside the container with proper volume mounts
+
+This provides a unified interface regardless of which container runtime is used.
+
 == Container Environment
 
 All UnifiedDB tools run inside a container (Docker, Podman, or Singularity) for consistency.
 The container includes mise-managed tool versions, ensuring the same versions are used in:
 
-- Local development (via `./do` commands)
+- Local development (via `./do` or `mise run` commands)
 - GitHub Actions CI
 - VS Code devcontainer
 
@@ -53,6 +110,7 @@ The container includes mise-managed tool versions, ensuring the same versions ar
 - `.devcontainer/Dockerfile` - Docker image definition
 - `container.def` - Singularity definition (auto-generated from Dockerfile)
 - `bin/.container-tag` - Version tag for the container
+- `bin/container-run` - Shim script for running commands in container
 
 == Updating Tool Versions
 

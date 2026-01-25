@@ -10,6 +10,14 @@
 # - Dockerfile
 #
 # Mise version used in container: 2025.1.6 (see MISE_VERSION in Dockerfile)
+#
+# ## Tasks
+#
+# Mise tasks provide a simpler interface to common commands. All tasks that need
+# the container environment use `bin/container-run` as a shim to automatically
+# run inside docker/podman/singularity.
+#
+# Run `mise tasks` to see available tasks, or `mise run <task>` to execute one.
 
 [settings]
 # Also read legacy .ruby-version, .node-version, .python-version files if present
@@ -28,3 +36,177 @@ node = "20"
 
 # Python version (Ubuntu 24.04 ships 3.12)
 python = "3.12"
+
+# =============================================================================
+# Tasks
+# =============================================================================
+# All tasks that require the container use ./bin/container-run as a shim.
+# This automatically handles docker/podman/singularity selection.
+
+# -----------------------------------------------------------------------------
+# Testing tasks
+# -----------------------------------------------------------------------------
+
+[tasks.test]
+description = "Run smoke tests"
+run = "./bin/container-run bundle exec rake test:smoke"
+
+[tasks."test:smoke"]
+description = "Run smoke tests (alias for 'test')"
+run = "./bin/container-run bundle exec rake test:smoke"
+
+[tasks."test:regress"]
+description = "Run full regression tests"
+run = "./bin/container-run bundle exec rake test:regress"
+
+[tasks."test:nightly"]
+description = "Run nightly regression tests (builds all artifacts)"
+run = "./bin/container-run bundle exec rake test:nightly"
+
+[tasks."test:unit"]
+description = "Run unit tests"
+run = "./bin/container-run bundle exec rake test:unit"
+
+[tasks."test:sorbet"]
+description = "Type-check Ruby code with Sorbet"
+run = "./bin/container-run bundle exec rake test:sorbet"
+
+[tasks."test:schema"]
+description = "Validate architecture files against schema"
+run = "./bin/container-run bundle exec rake test:schema"
+
+[tasks."test:inst_encodings"]
+description = "Check instruction encodings for conflicts"
+run = "./bin/container-run bundle exec rake test:inst_encodings"
+
+[tasks."test:csrs"]
+description = "Check CSR definitions for conflicts"
+run = "./bin/container-run bundle exec rake test:csrs"
+
+[tasks."test:llvm"]
+description = "Run cross-validation against LLVM"
+run = "./bin/container-run bundle exec rake test:llvm"
+
+[tasks."test:idl"]
+description = "Type-check IDL code (requires CFG env var)"
+run = "./bin/container-run bundle exec rake test:idl"
+
+# -----------------------------------------------------------------------------
+# Generation tasks
+# -----------------------------------------------------------------------------
+
+[tasks."gen:arch"]
+description = "Generate architecture files from layouts"
+run = "./bin/container-run bundle exec rake gen:arch"
+
+[tasks."gen:resolved_arch"]
+description = "Resolve configuration and write to gen/resolved_arch (use CFG=name)"
+run = "./bin/container-run bundle exec rake gen:resolved_arch"
+
+[tasks."gen:cfg"]
+description = "Generate config files for profiles"
+run = "./bin/container-run bundle exec rake gen:cfg"
+
+[tasks."gen:tool_doc"]
+description = "Generate documentation for Ruby tooling"
+run = "./bin/container-run bundle exec rake gen:tool_doc"
+
+# -----------------------------------------------------------------------------
+# Tool wrapper tasks (run tools inside container)
+# -----------------------------------------------------------------------------
+
+[tasks.ruby]
+description = "Run Ruby inside container"
+run = "./bin/container-run bundle exec ruby"
+
+[tasks.bundle]
+description = "Run Bundler inside container"
+run = "./bin/container-run bundle"
+
+[tasks.rake]
+description = "Run Rake inside container"
+run = "./bin/container-run bundle exec rake"
+
+[tasks.python]
+description = "Run Python inside container"
+run = "./bin/container-run /opt/venv/bin/python3"
+
+[tasks.pip]
+description = "Run pip inside container"
+run = "./bin/container-run /opt/venv/bin/pip"
+
+[tasks.node]
+description = "Run Node.js inside container"
+run = "./bin/container-run node"
+
+[tasks.npm]
+description = "Run npm inside container"
+run = "./bin/container-run npm"
+
+[tasks.npx]
+description = "Run npx inside container"
+run = "./bin/container-run npx"
+
+# -----------------------------------------------------------------------------
+# UDB tool tasks
+# -----------------------------------------------------------------------------
+
+[tasks.idlc]
+description = "Run IDL compiler"
+run = "./bin/idlc"
+
+[tasks.udb]
+description = "Run UDB tool"
+run = "./bin/udb"
+
+[tasks."udb-gen"]
+description = "Run UDB generator"
+run = "./bin/udb-gen"
+
+# -----------------------------------------------------------------------------
+# Build/utility tasks
+# -----------------------------------------------------------------------------
+
+[tasks.clean]
+description = "Clean generated files"
+run = "./bin/clean"
+
+[tasks.clobber]
+description = "Clean generated files and container"
+run = "./bin/clobber"
+
+[tasks.build_container]
+description = "Build the container image"
+run = "./bin/build_container"
+
+[tasks."pre-commit"]
+description = "Run pre-commit hooks"
+run = "./bin/pre-commit"
+
+[tasks.portfolios]
+description = "Generate all portfolio-based PDF artifacts"
+run = "./bin/container-run bundle exec rake portfolios"
+
+# -----------------------------------------------------------------------------
+# Serve tasks
+# -----------------------------------------------------------------------------
+
+[tasks."serve:tool_doc"]
+description = "Start HTML server for tool documentation"
+run = "./bin/container-run bundle exec rake serve:tool_doc"
+
+# -----------------------------------------------------------------------------
+# Shortcut tasks for common PDFs
+# -----------------------------------------------------------------------------
+
+[tasks."MockCRD"]
+description = "Generate MockProcessor-CRD.pdf"
+run = "./bin/container-run bundle exec rake MockCRD"
+
+[tasks."MockCTP"]
+description = "Generate MockProcessor-CTP.pdf"
+run = "./bin/container-run bundle exec rake MockCTP"
+
+[tasks."MockProfile"]
+description = "Generate MockProfileRelease.pdf"
+run = "./bin/container-run bundle exec rake MockProfile"

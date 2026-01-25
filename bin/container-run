@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+#
+# Container runner shim for mise tasks
+# This script wraps commands to run them inside the container
+# Usage: bin/container-run <command> [args...]
+
+ROOT=$(dirname "$(dirname "$(realpath "${BASH_SOURCE[0]}")")")
+cd "$ROOT" || exit
+
+# Source the setup to get the $RUN variable (and other container config)
+source "$ROOT/bin/setup"
+
+# Execute the command with the container prefix
+# $RUN is set by bin/setup - it's empty for native, or contains the container command
+# shellcheck disable=SC2086
+exec $RUN "$@"
