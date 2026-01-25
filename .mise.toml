@@ -8,6 +8,8 @@
 # - package.json (node version)
 # - requirements.txt (python packages)
 # - Dockerfile
+#
+# Mise version used in container: 2025.1.6 (see MISE_VERSION in Dockerfile)
 
 [settings]
 # Also read legacy .ruby-version, .node-version, .python-version files if present
