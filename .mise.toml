@@ -1,0 +1,24 @@
+# SPDX-License-Identifier: CC0-1.0
+#
+# Mise configuration for unified tool version management
+# https://mise.jdx.dev/
+#
+# This file consolidates all tool versions that were previously scattered across:
+# - .ruby-version
+# - package.json (node)
+# - requirements.txt (python)
+# - Dockerfile
+
+[env]
+# Enable Ruby YJIT for better performance
+RUBY_YJIT_ENABLE = "1"
+
+[tools]
+# Ruby version (was in .ruby-version)
+ruby = "3.4.8"
+
+# Node.js version (Ubuntu 24.04 ships ~18.x, we specify explicitly)
+node = "20"
+
+# Python version (Ubuntu 24.04 ships 3.12)
+python = "3.12"

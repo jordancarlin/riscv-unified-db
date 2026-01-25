@@ -6,6 +6,8 @@ SHELL ["/bin/bash", "-c"]
 WORKDIR /workspace
 
 # please keep pkgs sorted
+# Note: nodejs, npm, python3, python3-pip, python3.12-venv are kept as fallback
+# but mise-managed versions take precedence via PATH
 RUN apt-get update && \
   apt-get install -y --no-install-recommends --fix-missing \
   build-essential \
@@ -44,14 +46,19 @@ RUN apt-get update && \
   && apt-get autoremove -y \
   && rm -rf /var/lib/{apt,dpkg,cache,log}/*
 
-  # build / install ruby
-COPY .ruby-version /opt/.ruby-version
+# Install mise (unified tool version manager)
+# https://mise.jdx.dev/
+ENV MISE_DATA_DIR="/opt/mise"
+ENV MISE_CACHE_DIR="/opt/mise/cache"
+RUN curl https://mise.run | sh && \
+    mv ~/.local/bin/mise /usr/local/bin/mise && \
+    mkdir -p /opt/mise
+
+# Copy mise configuration and install tools
+COPY .mise.toml /opt/.mise.toml
 ENV RUBY_YJIT_ENABLE=1
-RUN git clone --depth=1 https://github.com/rbenv/ruby-build.git && \
-    cd ruby-build && \
-    ./bin/ruby-build $(cat /opt/.ruby-version | tr -d "\n") /usr && \
-    cd .. && \
-    rm -rf ruby-build
+RUN cd /opt && mise install -y && \
+    mise reshim
 
 # build/install eqntott
 RUN git clone --depth=1 https://github.com/TheProjecter/eqntott.git && \
@@ -81,22 +88,26 @@ RUN git clone https://github.com/jar-ben/mustool.git && \
     rm -rf mustool
 
 # Create Python virtual environment and install packages
+# Use mise-managed python
 COPY requirements.txt /opt/requirements.txt
-RUN /usr/bin/python3 -m venv /opt/venv && \
-  /opt/venv/bin/pip install -r /opt/requirements.txt && \
-  rm /opt/requirements.txt
+RUN eval "$(mise activate bash)" && \
+    python3 -m venv /opt/venv && \
+    /opt/venv/bin/pip install -r /opt/requirements.txt && \
+    rm /opt/requirements.txt
 ENV PATH="/opt/venv/bin:$PATH"
 
 # Install npm packages globally in the container
+# Use mise-managed node/npm
 COPY package.json package-lock.json /opt/node/
-RUN cd /opt/node && \
-  /usr/bin/npm ci && \
-  rm /opt/node/package.json /opt/node/package-lock.json
+RUN eval "$(mise activate bash)" && \
+    cd /opt/node && \
+    npm ci && \
+    rm /opt/node/package.json /opt/node/package-lock.json
 ENV NODE_PATH="/opt/node/node_modules"
 ENV PATH="/opt/node/node_modules/.bin:$PATH"
 ENV IN_UDB_CONTAINER=true
 
-# install gems
+# install gems (using mise-managed ruby)
 COPY Gemfile /opt/Gemfile
 COPY Gemfile.lock /opt/Gemfile.lock
 COPY tools/ruby-gems/idlc/idlc.gemspec /opt/tools/ruby-gems/idlc/
@@ -112,7 +123,7 @@ COPY tools/ruby-gems/udb-gen/lib/gem_versions.rb /opt/tools/ruby-gems/udb-gen/li
 COPY tools/ruby-gems/udb-gen/lib/udb-gen/version.rb /opt/tools/ruby-gems/udb-gen/lib/udb-gen/
 COPY tools/ruby-gems/udb_helpers/udb_helpers.gemspec /opt/tools/ruby-gems/udb_helpers/
 COPY tools/ruby-gems/udb_helpers/lib/udb_helpers/version.rb /opt/tools/ruby-gems/udb_helpers/lib/udb_helpers/
-RUN bundle install --gemfile /opt/Gemfile
+RUN eval "$(mise activate bash)" && bundle install --gemfile /opt/Gemfile
 
 # the binaries for gems need to be copied in
 RUN mkdir -p /workspace/bin/container
@@ -124,3 +135,7 @@ ENV PATH="/workspace/bin/container:$PATH"
 # Grant the default ubuntu user sudo access
 RUN echo ubuntu ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/ubuntu \
     && chmod 0440 /etc/sudoers.d/ubuntu
+
+# Add mise shims to PATH for direct tool access
+# Shims are in /opt/mise/shims after running mise reshim
+ENV PATH="/opt/mise/shims:$PATH"
