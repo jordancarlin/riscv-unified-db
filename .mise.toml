@@ -4,17 +4,21 @@
 # https://mise.jdx.dev/
 #
 # This file consolidates all tool versions that were previously scattered across:
-# - .ruby-version
-# - package.json (node)
-# - requirements.txt (python)
+# - .ruby-version (still kept for IDE compatibility)
+# - package.json (node version)
+# - requirements.txt (python packages)
 # - Dockerfile
+
+[settings]
+# Also read legacy .ruby-version, .node-version, .python-version files if present
+legacy_version_file = true
 
 [env]
 # Enable Ruby YJIT for better performance
 RUBY_YJIT_ENABLE = "1"
 
 [tools]
-# Ruby version (was in .ruby-version)
+# Ruby version (also in .ruby-version for IDE compatibility)
 ruby = "3.4.8"
 
 # Node.js version (Ubuntu 24.04 ships ~18.x, we specify explicitly)

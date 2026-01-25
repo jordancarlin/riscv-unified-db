@@ -1,0 +1,75 @@
+// Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Tool Version Management
+
+UnifiedDB uses https://mise.jdx.dev/[mise] to manage tool versions consistently across
+development environments and CI.
+
+== Overview
+
+Tool versions are defined in `.mise.toml` in the project root. This single configuration
+file specifies versions for:
+
+- **Ruby** - Required for the main tooling and gem libraries
+- **Node.js** - Required for documentation generation (Antora, Asciidoctor plugins)
+- **Python** - Required for linting, testing, and automation scripts
+
+== Configuration Files
+
+=== `.mise.toml`
+
+The primary configuration file for tool versions. Example:
+
+[source,toml]
+----
+[tools]
+ruby = "3.4.8"
+node = "20"
+python = "3.12"
+----
+
+=== Legacy Support
+
+For IDE compatibility, the following legacy version files are still supported:
+
+- `.ruby-version` - Read by many Ruby IDEs and tools
+- `.node-version` - Read by some Node.js tools
+- `.python-version` - Read by some Python tools
+
+Mise is configured with `legacy_version_file = true` to read these files if present.
+
+== Container Environment
+
+All UnifiedDB tools run inside a container (Docker, Podman, or Singularity) for consistency.
+The container includes mise-managed tool versions, ensuring the same versions are used in:
+
+- Local development (via `./do` commands)
+- GitHub Actions CI
+- VS Code devcontainer
+
+=== Container Files
+
+- `.devcontainer/Dockerfile` - Docker image definition
+- `container.def` - Singularity definition (auto-generated from Dockerfile)
+- `bin/.container-tag` - Version tag for the container
+
+== Updating Tool Versions
+
+To update a tool version:
+
+1. Edit `.mise.toml` with the new version
+2. Update `.ruby-version` if changing Ruby (for IDE compatibility)
+3. Bump `bin/.container-tag` to trigger a container rebuild
+4. Commit all changes; pre-commit will regenerate `container.def`
+
+== Package Management
+
+Package managers handle dependencies for each ecosystem:
+
+- **Ruby gems**: `Gemfile` and `Gemfile.lock`
+- **Node packages**: `package.json` and `package-lock.json`
+- **Python packages**: `requirements.txt`
+
+These files are separate from tool version management and define the
+specific libraries used by UnifiedDB.
