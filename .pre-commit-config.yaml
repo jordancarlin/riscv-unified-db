@@ -145,7 +145,7 @@ repos:
     hooks:
       - id: singularity
         name: generate container.def
-        files: (bin/generate-container-def|\.devcontainer/Dockerfile|container\.def)$
+        files: (bin/generate-container-def|\.devcontainer/Dockerfile|container\.def|\.mise\.toml)$
         pass_filenames: false
         language: system
         entry: ./bin/generate-container-def

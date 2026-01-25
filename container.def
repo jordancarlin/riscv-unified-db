@@ -6,7 +6,7 @@ From: ubuntu:24.04
 Stage: spython-base
 
 %files
-.ruby-version /opt/.ruby-version
+.mise.toml /opt/.mise.toml
 requirements.txt /opt/requirements.txt
 package.json /opt/node/
 package-lock.json /opt/node/
@@ -36,6 +36,8 @@ mkdir -p /workspace
 cd /workspace
 
 # please keep pkgs sorted
+# Note: nodejs, npm, python3, python3-pip, python3.12-venv are kept as fallback
+# but mise-managed versions take precedence via PATH
 apt-get update && \
 apt-get install -y --no-install-recommends --fix-missing \
 build-essential \
@@ -74,13 +76,23 @@ zlib1g-dev \
 && apt-get autoremove -y \
 && rm -rf /var/lib/{apt,dpkg,cache,log}/*
 
-  # build / install ruby
+# Install mise (unified tool version manager)
+# https://mise.jdx.dev/
+# Using GitHub releases for more controlled installation
+MISE_DATA_DIR="/opt/mise"
+MISE_CACHE_DIR="/opt/mise/cache"
+MISE_VERSION="2025.1.6"
+mkdir -p /opt/mise && \
+curl -fsSL "https://github.com/jdx/mise/releases/download/v${MISE_VERSION}/mise-v${MISE_VERSION}-linux-x64" -o /usr/local/bin/mise && \
+chmod +x /usr/local/bin/mise
+
+# Install tools via mise
 RUBY_YJIT_ENABLE=1
-git clone --depth=1 https://github.com/rbenv/ruby-build.git && \
-cd ruby-build && \
-./bin/ruby-build $(cat /opt/.ruby-version | tr -d "\n") /usr && \
-cd .. && \
-rm -rf ruby-build
+cd /opt && mise install -y && \
+mise reshim
+
+# Add mise shims to PATH early so subsequent commands use mise-managed tools
+PATH="/opt/mise/shims:$PATH"
 
 # build/install eqntott
 git clone --depth=1 https://github.com/TheProjecter/eqntott.git && \
@@ -110,20 +122,22 @@ cd .. && \
 rm -rf mustool
 
 # Create Python virtual environment and install packages
-/usr/bin/python3 -m venv /opt/venv && \
+# Uses mise-managed python via PATH
+python3 -m venv /opt/venv && \
 /opt/venv/bin/pip install -r /opt/requirements.txt && \
 rm /opt/requirements.txt
 PATH="/opt/venv/bin:$PATH"
 
 # Install npm packages globally in the container
+# Uses mise-managed node/npm via PATH
 cd /opt/node && \
-/usr/bin/npm ci && \
+npm ci && \
 rm /opt/node/package.json /opt/node/package-lock.json
 NODE_PATH="/opt/node/node_modules"
 PATH="/opt/node/node_modules/.bin:$PATH"
 IN_UDB_CONTAINER=true
 
-# install gems
+# install gems (using mise-managed ruby via PATH)
 bundle install --gemfile /opt/Gemfile
 
 # the binaries for gems need to be copied in
@@ -135,7 +149,11 @@ echo ubuntu ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/ubuntu \
 && chmod 0440 /etc/sudoers.d/ubuntu
 %environment
 export DEBIAN_FRONTEND=noninteractive
+export MISE_DATA_DIR="/opt/mise"
+export MISE_CACHE_DIR="/opt/mise/cache"
+export MISE_VERSION="2025.1.6"
 export RUBY_YJIT_ENABLE=1
+export PATH="/opt/mise/shims:$PATH"
 export PATH="/opt/venv/bin:$PATH"
 export NODE_PATH="/opt/node/node_modules"
 export PATH="/opt/node/node_modules/.bin:$PATH"

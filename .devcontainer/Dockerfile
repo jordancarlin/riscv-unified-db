@@ -6,6 +6,8 @@ SHELL ["/bin/bash", "-c"]
 WORKDIR /workspace
 
 # please keep pkgs sorted
+# Note: nodejs, npm, python3, python3-pip, python3.12-venv are kept as fallback
+# but mise-managed versions take precedence via PATH
 RUN apt-get update && \
   apt-get install -y --no-install-recommends --fix-missing \
   build-essential \
@@ -44,14 +46,24 @@ RUN apt-get update && \
   && apt-get autoremove -y \
   && rm -rf /var/lib/{apt,dpkg,cache,log}/*
 
-  # build / install ruby
-COPY .ruby-version /opt/.ruby-version
+# Install mise (unified tool version manager)
+# https://mise.jdx.dev/
+# Using GitHub releases for more controlled installation
+ENV MISE_DATA_DIR="/opt/mise"
+ENV MISE_CACHE_DIR="/opt/mise/cache"
+ENV MISE_VERSION="2025.1.6"
+RUN mkdir -p /opt/mise && \
+    curl -fsSL "https://github.com/jdx/mise/releases/download/v${MISE_VERSION}/mise-v${MISE_VERSION}-linux-x64" -o /usr/local/bin/mise && \
+    chmod +x /usr/local/bin/mise
+
+# Copy mise configuration and install tools
+COPY .mise.toml /opt/.mise.toml
 ENV RUBY_YJIT_ENABLE=1
-RUN git clone --depth=1 https://github.com/rbenv/ruby-build.git && \
-    cd ruby-build && \
-    ./bin/ruby-build $(cat /opt/.ruby-version | tr -d "\n") /usr && \
-    cd .. && \
-    rm -rf ruby-build
+RUN cd /opt && mise install -y && \
+    mise reshim
+
+# Add mise shims to PATH early so subsequent commands use mise-managed tools
+ENV PATH="/opt/mise/shims:$PATH"
 
 # build/install eqntott
 RUN git clone --depth=1 https://github.com/TheProjecter/eqntott.git && \
@@ -81,22 +93,24 @@ RUN git clone https://github.com/jar-ben/mustool.git && \
     rm -rf mustool
 
 # Create Python virtual environment and install packages
+# Uses mise-managed python via PATH
 COPY requirements.txt /opt/requirements.txt
-RUN /usr/bin/python3 -m venv /opt/venv && \
-  /opt/venv/bin/pip install -r /opt/requirements.txt && \
-  rm /opt/requirements.txt
+RUN python3 -m venv /opt/venv && \
+    /opt/venv/bin/pip install -r /opt/requirements.txt && \
+    rm /opt/requirements.txt
 ENV PATH="/opt/venv/bin:$PATH"
 
 # Install npm packages globally in the container
+# Uses mise-managed node/npm via PATH
 COPY package.json package-lock.json /opt/node/
 RUN cd /opt/node && \
-  /usr/bin/npm ci && \
-  rm /opt/node/package.json /opt/node/package-lock.json
+    npm ci && \
+    rm /opt/node/package.json /opt/node/package-lock.json
 ENV NODE_PATH="/opt/node/node_modules"
 ENV PATH="/opt/node/node_modules/.bin:$PATH"
 ENV IN_UDB_CONTAINER=true
 
-# install gems
+# install gems (using mise-managed ruby via PATH)
 COPY Gemfile /opt/Gemfile
 COPY Gemfile.lock /opt/Gemfile.lock
 COPY tools/ruby-gems/idlc/idlc.gemspec /opt/tools/ruby-gems/idlc/
