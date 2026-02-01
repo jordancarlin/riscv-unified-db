@@ -26,6 +26,10 @@
           "matchStrings": ["(?<version>[^\\s]+)"]
         }
       ]
+    },
+    {
+      "matchPackageNames": ["ruff", "astral-sh/ruff-pre-commit"],
+      "groupName": "ruff"
     }
   ],
   "customManagers": [
