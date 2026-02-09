@@ -43,6 +43,7 @@ ENV MISE_CONFIG_DIR="/mise"
 ENV MISE_CACHE_DIR="/mise/cache"
 ENV MISE_INSTALL_PATH="/usr/local/bin/mise"
 ENV MISE_YES=1
+ENV MISE_TRUSTED_CONFIG_PATHS="/"
 ENV PATH="/mise/shims:$PATH"
 RUN curl https://mise.run | sh
 
