@@ -74,9 +74,11 @@ zlib1g-dev \
 MISE_DATA_DIR="/mise"
 MISE_CONFIG_DIR="/mise"
 MISE_CACHE_DIR="/mise/cache"
+MISE_STATE_DIR="/mise/state"
 MISE_INSTALL_PATH="/usr/local/bin/mise"
 MISE_YES=1
 MISE_TRUSTED_CONFIG_PATHS="/"
+UV_CACHE_DIR="/tmp/uv-cache"
 PATH="/mise/shims:$PATH"
 curl https://mise.run | sh
 
@@ -84,6 +86,8 @@ curl https://mise.run | sh
 # Install rust first — needed during Ruby compilation for YJIT
 mise install rust
 mise install
+mise reshim
+mkdir -p /mise/state && chmod -R 777 /mise/state
 
 # build/install eqntott
 git clone --depth=1 https://github.com/TheProjecter/eqntott.git && \
@@ -116,6 +120,7 @@ rm -rf mustool
 cd /opt/python && uv sync
 PATH="/opt/python/.venv/bin:$PATH"
 UV_PROJECT_ENVIRONMENT="/opt/python/.venv"
+mkdir -p /tmp/uv-cache && chmod -R 777 /tmp/uv-cache
 
 # Install npm packages globally in the container
 cd /opt/node && \
@@ -140,9 +145,11 @@ export DEBIAN_FRONTEND=noninteractive
 export MISE_DATA_DIR="/mise"
 export MISE_CONFIG_DIR="/mise"
 export MISE_CACHE_DIR="/mise/cache"
+export MISE_STATE_DIR="/mise/state"
 export MISE_INSTALL_PATH="/usr/local/bin/mise"
 export MISE_YES=1
 export MISE_TRUSTED_CONFIG_PATHS="/"
+export UV_CACHE_DIR="/tmp/uv-cache"
 export PATH="/mise/shims:$PATH"
 export PATH="/opt/python/.venv/bin:$PATH"
 export UV_PROJECT_ENVIRONMENT="/opt/python/.venv"
