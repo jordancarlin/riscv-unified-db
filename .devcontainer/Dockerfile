@@ -19,6 +19,7 @@ RUN apt-get update && \
   gdb \
   git \
   gpg \
+  gpg-agent \
   less \
   libc6-dev-riscv64-cross \
   libelf-dev \
