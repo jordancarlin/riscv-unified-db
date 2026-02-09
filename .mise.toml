@@ -4,11 +4,11 @@
 # For native setup: install mise, then run `mise install` from this directory.
 
 [tools]
-ruby = "3.4.8"
+ruby = "3.4"
 python = "3.14"
-node = "22"
+node = "24"
 uv = "latest"
-cmake = "latest"
+cmake = "3.28"
 shellcheck = "latest"
 "github-cli" = "latest"
 rust = "latest"
