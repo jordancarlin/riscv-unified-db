@@ -51,9 +51,11 @@ RUN curl https://mise.run | sh
 
 # Install tools managed by mise (.mise.toml)
 COPY .mise.toml /mise/config.toml
+COPY .ruby-version .python-version /mise/
 # Install rust first — needed during Ruby compilation for YJIT
 RUN mise install rust
 RUN mise install
+RUN mise reshim
 
 RUN mkdir -p /mise/state /uv/uv-cache && chmod -R 777 /mise/state /uv/uv-cache
 
