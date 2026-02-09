@@ -41,9 +41,11 @@ RUN apt-get update && \
 ENV MISE_DATA_DIR="/mise"
 ENV MISE_CONFIG_DIR="/mise"
 ENV MISE_CACHE_DIR="/mise/cache"
+ENV MISE_STATE_DIR="/mise/state"
 ENV MISE_INSTALL_PATH="/usr/local/bin/mise"
 ENV MISE_YES=1
 ENV MISE_TRUSTED_CONFIG_PATHS="/"
+ENV UV_CACHE_DIR="/uv/uv-cache"
 ENV PATH="/mise/shims:$PATH"
 RUN curl https://mise.run | sh
 
@@ -52,6 +54,8 @@ COPY .mise.toml /mise/config.toml
 # Install rust first — needed during Ruby compilation for YJIT
 RUN mise install rust
 RUN mise install
+
+RUN mkdir -p /mise/state /uv/uv-cache && chmod -R 777 /mise/state /uv/uv-cache
 
 # build/install eqntott
 RUN git clone --depth=1 https://github.com/TheProjecter/eqntott.git && \

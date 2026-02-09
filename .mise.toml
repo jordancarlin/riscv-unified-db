@@ -4,8 +4,6 @@
 # For native setup: install mise, then run `mise install` from this directory.
 
 [tools]
-ruby = "3.4.8"
-python = "3.12"
 node = "22"
 uv = "latest"
 cmake = "latest"
@@ -15,3 +13,6 @@ rust = "latest"
 
 [env]
 RUBY_YJIT_ENABLE = "1"
+
+[settings]
+idiomatic_version_file_enable_tools = ["ruby", "python"]
