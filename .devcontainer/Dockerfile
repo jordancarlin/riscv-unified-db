@@ -55,8 +55,7 @@ COPY .mise.toml /mise/config.toml
 RUN mise install rust
 RUN mise install
 RUN mise reshim
-
-RUN mkdir -p /mise/state /uv/uv-cache && chmod -R 777 /mise/state /uv/uv-cache
+RUN mkdir -p /mise/state && chmod -R 777 /mise/state
 
 # build/install eqntott
 RUN git clone --depth=1 https://github.com/TheProjecter/eqntott.git && \
@@ -90,6 +89,7 @@ COPY pyproject.toml uv.lock /opt/python/
 RUN cd /opt/python && uv sync
 ENV PATH="/opt/python/.venv/bin:$PATH"
 ENV UV_PROJECT_ENVIRONMENT="/opt/python/.venv"
+RUN mkdir -p /uv/uv-cache && chmod -R 777 /uv/uv-cache
 
 # Install npm packages globally in the container
 COPY package.json package-lock.json /opt/node/
