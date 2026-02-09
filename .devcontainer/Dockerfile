@@ -45,7 +45,7 @@ ENV MISE_STATE_DIR="/mise/state"
 ENV MISE_INSTALL_PATH="/usr/local/bin/mise"
 ENV MISE_YES=1
 ENV MISE_TRUSTED_CONFIG_PATHS="/"
-ENV UV_CACHE_DIR="/uv/uv-cache"
+ENV UV_CACHE_DIR="/tmp/uv-cache"
 ENV PATH="/mise/shims:$PATH"
 RUN curl https://mise.run | sh
 
@@ -89,7 +89,7 @@ COPY pyproject.toml uv.lock /opt/python/
 RUN cd /opt/python && uv sync
 ENV PATH="/opt/python/.venv/bin:$PATH"
 ENV UV_PROJECT_ENVIRONMENT="/opt/python/.venv"
-RUN mkdir -p /uv/uv-cache && chmod -R 777 /uv/uv-cache
+RUN mkdir -p /tmp/uv-cache && chmod -R 777 /tmp/uv-cache
 
 # Install npm packages globally in the container
 COPY package.json package-lock.json /opt/node/
