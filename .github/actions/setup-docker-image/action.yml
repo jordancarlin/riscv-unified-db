@@ -1,0 +1,21 @@
+# Copyright (c) Jordan Carlin
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+name: Setup Docker Image
+description: Checkout repo, download Docker image artifact, and load it
+
+runs:
+  using: composite
+  steps:
+    - name: Clone Github Repo Action
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+    - name: Download Docker image
+      uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+      with:
+        name: docker_image
+        path: ${{ runner.temp }}
+
+    - name: Load image
+      shell: bash
+      run: docker load --input ${{ runner.temp }}/docker_image.tar

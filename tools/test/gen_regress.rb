@@ -17,20 +17,8 @@ tests["tests"].each do |test_name, test_data|
     "needs" => "build-container",
     "steps" => [
       {
-        "name" => "Clone Github Repo Action",
-        "uses" => regress_yaml["jobs"]["build-container"]["steps"][0]["uses"]
-      },
-      {
-        "name" => "Download docker image",
-        "uses" => regress_yaml["jobs"]["never-runs"]["steps"][0]["uses"],
-        "with" => {
-          "name" => "docker_image",
-          "path" => "${{ runner.temp }}"
-        }
-      },
-      {
-        "name" => "Load image",
-        "run" => "docker load --input ${{ runner.temp }}/docker_image.tar"
+        "name" => "Setup Docker image",
+        "uses" => "./.github/actions/setup-docker-image"
       }
     ]
   }
