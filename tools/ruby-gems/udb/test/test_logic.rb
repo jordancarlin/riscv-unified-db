@@ -1608,4 +1608,111 @@ class TestLogic < Minitest::Test
       end
     end
   end
+
+  def test_boolean_parameter_term_ordering
+    # Two terms with the same name/op but different boolean values must be orderable
+    term_true = ParameterTerm.new({
+      "name" => "MY_BOOL_PARAM",
+      "equal" => true,
+      "reason" => "test"
+    })
+    term_false = ParameterTerm.new({
+      "name" => "MY_BOOL_PARAM",
+      "equal" => false,
+      "reason" => "test"
+    })
+
+    # <=> should return a non-nil Integer without raising
+    cmp = term_true <=> term_false
+    refute_nil cmp, "Expected <=> to return an Integer for boolean comparison_values"
+    assert_instance_of Integer, cmp
+    assert_equal 1, cmp, "true should sort after false (1 <=> 0)"
+
+    cmp_reverse = term_false <=> term_true
+    assert_equal(-1, cmp_reverse, "false should sort before true (0 <=> 1)")
+
+    # Same boolean value should be equal
+    term_true2 = ParameterTerm.new({
+      "name" => "MY_BOOL_PARAM",
+      "equal" => true,
+      "reason" => "other reason"
+    })
+    assert_equal 0, term_true <=> term_true2
+    assert term_true.eql?(term_true2), "Terms with same boolean comparison_value should be eql?"
+    assert_equal term_true.hash, term_true2.hash
+
+    # Different boolean values should not be eql?
+    refute term_true.eql?(term_false)
+  end
+
+  def test_boolean_parameter_term_as_hash_key
+    # ParameterTerm is used as a Hash key (e.g. in LogicNode#literals).
+    # Ensure boolean-valued terms work correctly in that context.
+    term_true = ParameterTerm.new({
+      "name" => "MY_BOOL_PARAM",
+      "equal" => true,
+      "reason" => "test"
+    })
+    term_false = ParameterTerm.new({
+      "name" => "MY_BOOL_PARAM",
+      "equal" => false,
+      "reason" => "test"
+    })
+
+    h = {}
+    h[term_true] = :a
+    h[term_false] = :b
+    assert_equal 2, h.size, "Boolean true and false terms should be distinct hash keys"
+    assert_equal :a, h[term_true]
+    assert_equal :b, h[term_false]
+  end
+
+  def test_logic_node_literals_with_boolean_terms
+    # LogicNode#literals deduplicates using a Hash keyed by TermType.
+    # This previously raised TypeError when ParameterTerms had boolean comparison_values.
+    term_true = ParameterTerm.new({
+      "name" => "MY_BOOL_PARAM",
+      "equal" => true,
+      "reason" => "test"
+    })
+    term_false = ParameterTerm.new({
+      "name" => "MY_BOOL_PARAM",
+      "equal" => false,
+      "reason" => "test"
+    })
+
+    node = LogicNode.new(
+      LogicNodeType::And,
+      [
+        LogicNode.new(LogicNodeType::Term, [term_true]),
+        LogicNode.new(LogicNodeType::Term, [term_false])
+      ]
+    )
+
+    # Should not raise TypeError
+    lits = node.literals
+    assert_equal 2, lits.size
+    assert_includes lits, term_true
+    assert_includes lits, term_false
+  end
+
+  def test_boolean_parameter_term_sorting
+    # Array#sort relies on <=> — ensure a mixed set of boolean terms sorts without error
+    terms = [
+      ParameterTerm.new({ "name" => "B_PARAM", "equal" => false, "reason" => "r" }),
+      ParameterTerm.new({ "name" => "A_PARAM", "equal" => true, "reason" => "r" }),
+      ParameterTerm.new({ "name" => "B_PARAM", "equal" => true, "reason" => "r" }),
+      ParameterTerm.new({ "name" => "A_PARAM", "equal" => false, "reason" => "r" })
+    ]
+
+    sorted = terms.sort
+    assert_equal "A_PARAM", sorted[0].name
+    refute sorted[0].comparison_value
+    assert_equal "A_PARAM", sorted[1].name
+    assert sorted[1].comparison_value
+    assert_equal "B_PARAM", sorted[2].name
+    refute sorted[2].comparison_value
+    assert_equal "B_PARAM", sorted[3].name
+    assert sorted[3].comparison_value
+  end
 end
