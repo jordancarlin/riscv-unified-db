@@ -4,6 +4,8 @@
 # typed: true
 # frozen_string_literal: true
 
+require "fileutils"
+require "pathname"
 require "sorbet-runtime"
 require "tty-exit"
 
@@ -42,6 +44,7 @@ module UdbGen
       short "-o"
       long "--output=file"
       desc "Output file path (default: stdout)"
+      convert :path
     end
 
     sig { returns(String) }
@@ -111,10 +114,9 @@ module UdbGen
       if params[:output].nil?
         $stdout.puts header
       else
-        output_path = Pathname.new(params[:output])
-        FileUtils.mkdir_p(output_path.dirname)
-        File.write(output_path, header)
-        Udb.logger.info "Generated C header: #{output_path}"
+        FileUtils.mkdir_p(params[:output].dirname)
+        File.write(params[:output], header)
+        Udb.logger.info "Generated C header: #{params[:output]}"
       end
 
       exit_with(:success)
