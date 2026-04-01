@@ -1,4 +1,4 @@
-# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# Copyright (c) Jordan Carlin, Harvey Mudd College.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 # typed: true
