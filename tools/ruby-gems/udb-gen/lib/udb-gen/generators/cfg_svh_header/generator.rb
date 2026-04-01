@@ -54,7 +54,7 @@ module UdbGen
       end
 
       lines = []
-      guard_name = "#{cfg_arch.name.upcase.gsub(/[^A-Z0-9]/, "_")}_SVH"
+      guard_name = "UDB_CFG_#{cfg_arch.name.upcase.gsub(/[^A-Z0-9]/, "_")}_SVH"
 
       lines << "// SPDX-License-Identifier: BSD-3-Clause-Clear"
       lines << "//"
