@@ -11,7 +11,7 @@ require "fileutils"
 require "pathname"
 
 class TestCfgHeaders < Minitest::Test
-  REPO_ROOT = Pathname.new(__dir__).join("..", "..").realpath
+  REPO_ROOT = (Pathname.new(__dir__) / ".." / ".." / ".." / "..").realpath
   GOLDEN_DIR = REPO_ROOT / "tests" / "data" / "golden"
   UDB_GEN = (REPO_ROOT / "bin" / "udb-gen").to_s
   TEST_CONFIG = "mc100-32-full-example"

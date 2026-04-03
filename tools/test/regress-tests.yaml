@@ -169,7 +169,7 @@ tests:
     ci_stage: pr
     test:
       - name: Test cfg header generation against golden output
-        run: ./bin/ruby tools/test/test_cfg_headers.rb
+        run: ./bin/ruby tools/ruby-gems/udb-gen/test/test_cfg_headers.rb
 
   regress-cpp-unit:
     ci_stage: pr
