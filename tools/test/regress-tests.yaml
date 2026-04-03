@@ -165,17 +165,11 @@ tests:
       - name: Generate sverilog_header code
         run: ./do gen:sverilog
 
-  regress-gen-cfg-c-header:
+  regress-gen-cfg-headers:
     ci_stage: pr
     test:
-      - name: Generate and check cfg C header against golden output
-        run: ./do test:cfg_c_header
-
-  regress-gen-cfg-svh-header:
-    ci_stage: pr
-    test:
-      - name: Generate and check cfg SystemVerilog header against golden output
-        run: ./do test:cfg_svh_header
+      - name: Test cfg header generation against golden output
+        run: ./bin/ruby tools/test/test_cfg_headers.rb
 
   regress-cpp-unit:
     ci_stage: pr

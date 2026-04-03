@@ -78,11 +78,12 @@ def check_gem(gem_config, changed_files, base_ref)
   additional_dirs = gem_config[:additional_dirs] || []
 
   # Check if any files in the gem directory have changed
-  gem_files_changed = changed_files.any? { |f| f.start_with?(gem_dir) }
+  # Use trailing slash to avoid matching similarly-named gems (e.g., udb vs udb-gen)
+  gem_files_changed = changed_files.any? { |f| f.start_with?("#{gem_dir}/") }
 
   # Also check additional directories if specified
   additional_files_changed = additional_dirs.any? do |dir|
-    changed_files.any? { |f| f.start_with?(dir) }
+    changed_files.any? { |f| f.start_with?("#{dir}/") }
   end
 
   return :no_changes unless gem_files_changed || additional_files_changed
