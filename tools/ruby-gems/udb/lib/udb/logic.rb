@@ -1054,14 +1054,17 @@ module Udb
         comparison_type <=> other_param.comparison_type
       elsif comparison_value != other_param.comparison_value
         cv = comparison_value
-        if cv.is_a?(String)
-          cv <=> T.cast(other_param.comparison_value, String)
+        ocv = other_param.comparison_value
+        if cv.class != ocv.class
+          cv.class.name <=> ocv.class.name
+        elsif cv.is_a?(String)
+          cv <=> T.cast(ocv, String)
         elsif cv.is_a?(Array)
-          cv <=> T.cast(other_param.comparison_value, T::Array[T.any(String, T::Boolean, Integer)])
+          cv <=> T.cast(ocv, T::Array[T.any(String, T::Boolean, Integer)])
         elsif cv.is_a?(Integer)
-          T.cast(comparison_value, Integer) <=> T.cast(other_param.comparison_value, Integer)
+          T.cast(cv, Integer) <=> T.cast(ocv, Integer)
         else
-          T.cast(comparison_value, T::Boolean) <=> T.cast(other_param.comparison_value, T::Boolean)
+          T.cast(cv, T::Boolean) <=> T.cast(ocv, T::Boolean)
         end
       else
         # these are the same (ignoring reason)
