@@ -1036,7 +1036,9 @@ module Udb
         end
       elsif @yaml.key?("oneOf") || other_param.to_h.key?("oneOf")
         if @yaml.key?("oneOf") && other_param.to_h.key?("oneOf")
-          @yaml.fetch("oneOf") <=> other_param.to_h.fetch("oneOf")
+          one_of = @yaml.fetch("oneOf")
+          other_one_of = other_param.to_h.fetch("oneOf")
+          one_of.map { |e| [e.class.name, e.to_s] } <=> other_one_of.map { |e| [e.class.name, e.to_s] }
         elsif @yaml.key?("oneOf")
           1
         else
@@ -1060,7 +1062,8 @@ module Udb
         elsif cv.is_a?(String)
           cv <=> T.cast(ocv, String)
         elsif cv.is_a?(Array)
-          cv <=> T.cast(ocv, T::Array[T.any(String, T::Boolean, Integer)])
+          ocv_arr = T.cast(ocv, T::Array[T.any(String, T::Boolean, Integer)])
+          cv.map { |e| [e.class.name, e.to_s] } <=> ocv_arr.map { |e| [e.class.name, e.to_s] }
         elsif cv.is_a?(Integer)
           T.cast(cv, Integer) <=> T.cast(ocv, Integer)
         else
