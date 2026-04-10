@@ -1064,15 +1064,12 @@ module Udb
         elsif cv.is_a?(Array)
           ocv_arr = T.cast(ocv, T::Array[T.any(String, T::Boolean, Integer)])
           cv.map { |e| [e.class.name, e.to_s] } <=> ocv_arr.map { |e| [e.class.name, e.to_s] }
-        elsif cv.is_a?(Integer)
-          T.cast(cv, Integer) <=> T.cast(ocv, Integer)
         else
-          # TrueClass and FalseClass are distinct classes; two booleans with
-          # differing values will always have different classes and be handled by the
-          # cv.class != ocv.class branch above, making this branch unreachable.
-          # :nocov:
-          T.cast(cv, T::Boolean) <=> T.cast(ocv, T::Boolean)
-          # :nocov:
+          # cv and ocv have the same class (not String, not Array).
+          # Given the type constraints (String, Boolean, Integer), this is Integer.
+          # Two booleans with the same value are equal (cv != ocv is false), so
+          # TrueClass or FalseClass values never reach here.
+          T.cast(cv, Integer) <=> T.cast(ocv, Integer)
         end
       else
         # these are the same (ignoring reason)

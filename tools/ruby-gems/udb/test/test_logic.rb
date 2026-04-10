@@ -466,7 +466,8 @@ class TestLogic < Minitest::Test
     assert_kind_of Integer, result5
     [term_str1, term_str2].sort!
 
-    # Integer comparison_value: two equal-typed Integer terms with different values.
+    # Integer (else) comparison_value: two equal-typed Integer terms with different values.
+    # Integers are the only reachable same-class, non-String, non-Array pair.
     term_int1 = ParameterTerm.new("name" => "A", "equal" => 1)
     term_int2 = ParameterTerm.new("name" => "A", "equal" => 2)
     result6 = term_int1 <=> term_int2
