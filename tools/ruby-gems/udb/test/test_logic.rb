@@ -411,17 +411,17 @@ class TestLogic < Minitest::Test
   end
 
   def test_parameter_term_comparison
-    # Same comparison_type but different comparison_value types (bool scalar vs bool array)
+    # Same comparison_type with different comparison_value types (bool scalar vs bool array)
     # should not raise a TypeError and return a stable non-nil Integer result.
     term_scalar = ParameterTerm.new("name" => "A", "equal" => true)
-    term_array  = ParameterTerm.new("name" => "A", "oneOf" => [true, false])
+    term_array  = ParameterTerm.new("name" => "A", "equal" => [true, false])
     result = term_scalar <=> term_array
     refute_nil result
     assert_kind_of Integer, result
 
     # Sorting a mix of the two must not raise and must produce a stable order.
     terms = [term_array, term_scalar]
-    assert_nothing_raised { terms.sort! }
+    terms.sort!
     assert_equal 2, terms.size
 
     # Two ParameterTerms with the same comparison_type (equal) but differing
@@ -440,7 +440,7 @@ class TestLogic < Minitest::Test
     result3 = term_bool_arr1 <=> term_bool_arr2
     refute_nil result3
     assert_kind_of Integer, result3
-    assert_nothing_raised { [term_bool_arr2, term_bool_arr1].sort! }
+    [term_bool_arr2, term_bool_arr1].sort!
 
     # Same-length oneOf bool arrays with different element order must also compare
     # without returning nil.
@@ -449,7 +449,7 @@ class TestLogic < Minitest::Test
     result4 = term_bool_arr3 <=> term_bool_arr4
     refute_nil result4
     assert_kind_of Integer, result4
-    assert_nothing_raised { [term_bool_arr3, term_bool_arr4].sort! }
+    [term_bool_arr3, term_bool_arr4].sort!
   end
 
   def test_bad_logic_nodes

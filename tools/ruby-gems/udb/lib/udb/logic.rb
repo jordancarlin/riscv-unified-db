@@ -1034,10 +1034,10 @@ module Udb
         elsif !@yaml.key?("includes") && other_param.to_h.key?("includes")
           -1
         end
-      elsif @yaml.key?("oneOf") || other_param.to_h.key?("oneOf")
-        if @yaml.key?("oneOf") && other_param.to_h.key?("oneOf")
+      elsif @yaml.key?("oneOf") || other_param.comparison_type == ParameterComparisonType::OneOf
+        if @yaml.key?("oneOf") && other_param.comparison_type == ParameterComparisonType::OneOf
           one_of = @yaml.fetch("oneOf")
-          other_one_of = other_param.to_h.fetch("oneOf")
+          other_one_of = T.cast(other_param.comparison_value, T::Array[T.untyped])
           one_of.map { |e| [e.class.name, e.to_s] } <=> other_one_of.map { |e| [e.class.name, e.to_s] }
         elsif @yaml.key?("oneOf")
           1
