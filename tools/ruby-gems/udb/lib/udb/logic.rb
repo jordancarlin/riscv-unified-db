@@ -316,7 +316,7 @@ module Udb
       end
     end
 
-    ValueType = T.type_alias { T.any(Integer, String, T::Boolean, T::Array[T.any(Integer, String)]) }
+    ValueType = T.type_alias { T.any(Integer, String, T::Boolean, T::Array[T.any(Integer, String, T::Boolean)]) }
 
     sig { params(yaml: T::Hash[String, T.untyped]).void }
     def initialize(yaml)
