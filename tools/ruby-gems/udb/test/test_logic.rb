@@ -410,6 +410,48 @@ class TestLogic < Minitest::Test
     assert_raises { term.eval_value(5) }
   end
 
+  def test_parameter_term_comparison
+    # Same comparison_type but different comparison_value types (bool scalar vs bool array)
+    # should not raise a TypeError and return a stable non-nil Integer result.
+    term_scalar = ParameterTerm.new("name" => "A", "equal" => true)
+    term_array  = ParameterTerm.new("name" => "A", "oneOf" => [true, false])
+    result = term_scalar <=> term_array
+    refute_nil result
+    assert_kind_of Integer, result
+
+    # Sorting a mix of the two must not raise and must produce a stable order.
+    terms = [term_array, term_scalar]
+    assert_nothing_raised { terms.sort! }
+    assert_equal 2, terms.size
+
+    # Two ParameterTerms with the same comparison_type (equal) but differing
+    # comparison_value types (TrueClass vs FalseClass – different classes) must
+    # produce a non-nil, Integer result.
+    term_true  = ParameterTerm.new("name" => "A", "equal" => true)
+    term_false = ParameterTerm.new("name" => "A", "equal" => false)
+    result2 = term_true <=> term_false
+    refute_nil result2
+    assert_kind_of Integer, result2
+
+    # Two ParameterTerms with oneOf arrays that contain booleans must compare
+    # without returning nil (true <=> false is nil in Ruby's default <=>).
+    term_bool_arr1 = ParameterTerm.new("name" => "A", "oneOf" => [true])
+    term_bool_arr2 = ParameterTerm.new("name" => "A", "oneOf" => [true, false])
+    result3 = term_bool_arr1 <=> term_bool_arr2
+    refute_nil result3
+    assert_kind_of Integer, result3
+    assert_nothing_raised { [term_bool_arr2, term_bool_arr1].sort! }
+
+    # Same-length oneOf bool arrays with different element order must also compare
+    # without returning nil.
+    term_bool_arr3 = ParameterTerm.new("name" => "A", "oneOf" => [true, false])
+    term_bool_arr4 = ParameterTerm.new("name" => "A", "oneOf" => [false, true])
+    result4 = term_bool_arr3 <=> term_bool_arr4
+    refute_nil result4
+    assert_kind_of Integer, result4
+    assert_nothing_raised { [term_bool_arr3, term_bool_arr4].sort! }
+  end
+
   def test_bad_logic_nodes
     assert_raises { LogicNode.new(LogicNodeType::Term, [ExtensionTerm.new("A", "1.0.0"), ExtensionTerm.new("B", "1.0.0")]) }
     assert_raises { LogicNode.new(LogicNodeType::Term, [5]) }
