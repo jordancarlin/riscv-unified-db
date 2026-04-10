@@ -39,7 +39,7 @@ PATH
 PATH
   remote: tools/ruby-gems/udb
   specs:
-    udb (0.1.8)
+    udb (0.1.9)
       activesupport
       asciidoctor
       awesome_print
