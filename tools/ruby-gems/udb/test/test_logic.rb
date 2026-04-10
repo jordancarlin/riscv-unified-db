@@ -450,6 +450,38 @@ class TestLogic < Minitest::Test
     refute_nil result4
     assert_kind_of Integer, result4
     [term_bool_arr3, term_bool_arr4].sort!
+
+    # When only one side has oneOf, comparison is ordered: oneOf > non-oneOf.
+    term_one_of = ParameterTerm.new("name" => "A", "oneOf" => [1, 2])
+    term_equal  = ParameterTerm.new("name" => "A", "equal" => 1)
+    assert_equal  1, (term_one_of <=> term_equal)
+    assert_equal(-1, (term_equal  <=> term_one_of))
+
+    # String comparison_value: two equal-typed String terms with different values
+    # must produce a stable non-nil Integer result.
+    term_str1 = ParameterTerm.new("name" => "A", "equal" => "foo")
+    term_str2 = ParameterTerm.new("name" => "A", "equal" => "bar")
+    result5 = term_str1 <=> term_str2
+    refute_nil result5
+    assert_kind_of Integer, result5
+    [term_str1, term_str2].sort!
+
+    # Integer comparison_value: two equal-typed Integer terms with different values.
+    term_int1 = ParameterTerm.new("name" => "A", "equal" => 1)
+    term_int2 = ParameterTerm.new("name" => "A", "equal" => 2)
+    result6 = term_int1 <=> term_int2
+    refute_nil result6
+    assert_kind_of Integer, result6
+    [term_int1, term_int2].sort!
+
+    # Array comparison_value: two equal-typed Array terms with different values
+    # (same element class) must compare using the map-based ordering.
+    term_arr1 = ParameterTerm.new("name" => "A", "equal" => [1, 2])
+    term_arr2 = ParameterTerm.new("name" => "A", "equal" => [3, 4])
+    result7 = term_arr1 <=> term_arr2
+    refute_nil result7
+    assert_kind_of Integer, result7
+    [term_arr1, term_arr2].sort!
   end
 
   def test_bad_logic_nodes

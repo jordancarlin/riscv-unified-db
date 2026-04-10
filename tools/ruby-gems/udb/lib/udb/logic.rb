@@ -1067,7 +1067,12 @@ module Udb
         elsif cv.is_a?(Integer)
           T.cast(cv, Integer) <=> T.cast(ocv, Integer)
         else
+          # TrueClass and FalseClass are distinct classes; two booleans with
+          # differing values will always have different classes and be handled by the
+          # cv.class != ocv.class branch above, making this branch unreachable.
+          # :nocov:
           T.cast(cv, T::Boolean) <=> T.cast(ocv, T::Boolean)
+          # :nocov:
         end
       else
         # these are the same (ignoring reason)
