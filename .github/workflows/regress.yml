@@ -667,7 +667,7 @@ jobs:
       run: docker load --input ${{ runner.temp }}/docker_image.tar
     - name: Generate sverilog_header code
       run: "./do gen:sverilog"
-  regress-gen-cfg-c-header:
+  regress-udb-gen-unit-test:
     runs-on: ubuntu-latest
     needs: build-container
     steps:
@@ -680,23 +680,12 @@ jobs:
         path: "${{ runner.temp }}"
     - name: Load image
       run: docker load --input ${{ runner.temp }}/docker_image.tar
-    - name: Generate and check cfg C header against golden output
-      run: "./do test:cfg_c_header"
-  regress-gen-cfg-svh-header:
-    runs-on: ubuntu-latest
-    needs: build-container
-    steps:
-    - name: Clone Github Repo Action
-      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
-    - name: Download docker image
-      uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131
-      with:
-        name: docker_image
-        path: "${{ runner.temp }}"
-    - name: Load image
-      run: docker load --input ${{ runner.temp }}/docker_image.tar
-    - name: Generate and check cfg SystemVerilog header against golden output
-      run: "./do test:cfg_svh_header"
+    - name: Run udb-gen gem ${{ matrix.test }} unit tests
+      run: "./bin/ruby tools/ruby-gems/udb-gen/test/test_${{ matrix.test }}.rb"
+    strategy:
+      matrix:
+        test:
+        - cfg_headers
   regress-cpp-unit:
     runs-on: ubuntu-latest
     needs: build-container
@@ -1174,8 +1163,7 @@ jobs:
     - regress-gen-go
     - regress-gen-c-header
     - regress-gen-sverilog
-    - regress-gen-cfg-c-header
-    - regress-gen-cfg-svh-header
+    - regress-udb-gen-unit-test
     - regress-cpp-unit
     - regress-riscv-tests-32
     - regress-riscv-tests-64

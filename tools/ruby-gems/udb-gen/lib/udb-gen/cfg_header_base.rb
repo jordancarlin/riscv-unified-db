@@ -48,6 +48,10 @@ module UdbGen
     sig { abstract.returns(String) }
     def file_type_name; end
 
+    # Format an integer value as a language-appropriate literal
+    sig { abstract.params(value: Integer).returns(String) }
+    def format_integer(value); end
+
     sig { returns(String) }
     def generate_header
       unless cfg_arch.fully_configured?
@@ -178,7 +182,7 @@ module UdbGen
         when false
           next
         when Integer
-          lines << "#{define_directive} #{name} #{value}"
+          lines << "#{define_directive} #{name} #{format_integer(value)}"
           lines << "#{define_directive} #{name}_#{value}"
         when String
           lines << "#{define_directive} #{name}_#{sanitize_to_identifier(value)}"

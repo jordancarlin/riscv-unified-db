@@ -73,6 +73,9 @@ module UdbGen
     sig { override.returns(String) }
     def file_type_name = "C header"
 
+    sig { override.params(value: Integer).returns(String) }
+    def format_integer(value) = value.to_s
+
     sig { override.params(argv: T::Array[String]).returns(T.noreturn) }
     def run(argv)
       run_generator(argv)

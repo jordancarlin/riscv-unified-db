@@ -1,0 +1,53 @@
+# Copyright (c) Jordan Carlin, Harvey Mudd College.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+# typed: false
+# frozen_string_literal: true
+
+require_relative "test_helper"
+
+require "fileutils"
+require "tmpdir"
+require "pathname"
+
+require "udb/resolver"
+require "udb-gen/generators/cfg_c_header/generator"
+require "udb-gen/generators/cfg_svh_header/generator"
+
+class TestCfgHeaders < Minitest::Test
+  GOLDEN_DIR = Pathname.new(__dir__) / "data" / "golden"
+  TEST_CONFIG = "mc100-32-full-example"
+
+  def setup
+    @gen_dir = Dir.mktmpdir
+    @resolver = Udb::Resolver.new(
+      Udb.repo_root,
+      gen_path_override: Pathname.new(@gen_dir)
+    )
+    @cfg_arch = @resolver.cfg_arch_for(TEST_CONFIG)
+  end
+
+  def teardown
+    FileUtils.rm_rf @gen_dir
+  end
+
+  def test_cfg_c_header_matches_golden
+    gen = UdbGen::GenCfgCHeaderOptions.new
+    gen.instance_variable_set(:@cfg_arch, @cfg_arch)
+    output = gen.generate_header
+    golden = File.read(GOLDEN_DIR / "#{TEST_CONFIG}.golden.h")
+    assert_equal golden, output,
+      "C header output does not match golden file. " \
+      "If this is expected, update the golden file with: ./do chore:update_golden_cfg_headers"
+  end
+
+  def test_cfg_svh_header_matches_golden
+    gen = UdbGen::GenCfgSvhHeaderOptions.new
+    gen.instance_variable_set(:@cfg_arch, @cfg_arch)
+    output = gen.generate_header
+    golden = File.read(GOLDEN_DIR / "#{TEST_CONFIG}.golden.svh")
+    assert_equal golden, output,
+      "SystemVerilog header output does not match golden file. " \
+      "If this is expected, update the golden file with: ./do chore:update_golden_cfg_headers"
+  end
+end

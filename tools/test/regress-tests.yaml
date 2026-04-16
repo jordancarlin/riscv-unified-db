@@ -183,17 +183,17 @@ tests:
       - name: Generate sverilog_header code
         run: ./do gen:sverilog
 
-  regress-gen-cfg-c-header:
+  regress-udb-gen-unit-test:
     ci_stage: pr
+    tags:
+      - unit
+    strategy:
+      matrix:
+        test:
+          - cfg_headers
     test:
-      - name: Generate and check cfg C header against golden output
-        run: ./do test:cfg_c_header
-
-  regress-gen-cfg-svh-header:
-    ci_stage: pr
-    test:
-      - name: Generate and check cfg SystemVerilog header against golden output
-        run: ./do test:cfg_svh_header
+      - name: Run udb-gen gem ${{ matrix.test }} unit tests
+        run: ./bin/ruby tools/ruby-gems/udb-gen/test/test_${{ matrix.test }}.rb
 
   regress-cpp-unit:
     ci_stage: pr

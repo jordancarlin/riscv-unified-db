@@ -68,6 +68,14 @@ module UdbGen
     sig { override.returns(String) }
     def file_type_name = "SystemVerilog header"
 
+    # Emit sized hex literals so large unsigned values are not misinterpreted
+    sig { override.params(value: Integer).returns(String) }
+    def format_integer(value)
+      bits = [32, value.bit_length].max
+      width = ((bits + 31) / 32) * 32
+      "#{width}'h#{value.to_s(16).upcase}"
+    end
+
     sig { override.params(argv: T::Array[String]).returns(T.noreturn) }
     def run(argv)
       run_generator(argv)
