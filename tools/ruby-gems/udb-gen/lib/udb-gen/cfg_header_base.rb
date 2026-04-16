@@ -9,8 +9,6 @@ require "pathname"
 require "sorbet-runtime"
 require "tty-exit"
 
-require "udb/obj/extension"
-
 module UdbGen
   # Shared logic for generating config header files across languages (C, SystemVerilog, etc.).
   # Including classes must include TTY::Exit and extend SubcommandWithCommonOptions,
