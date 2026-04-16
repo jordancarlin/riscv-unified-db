@@ -64,8 +64,9 @@ module UdbGen
         "Config: #{cfg_arch.name}",
         "",
         "Define conventions:",
+        "  Extensions:           #{define_directive} NAME_SUPPORTED and #{define_directive} NAMEverPver_SUPPORTED",
         "  Boolean params:       #{define_directive} NAME           (present when true, absent when false)",
-        "  Integer params:       #{define_directive} NAME value",
+        "  Integer params:       #{define_directive} NAME value     and #{define_directive} NAME_value",
         "  Enum (string) params: #{define_directive} NAME_VALUE     (value sanitized to uppercase identifier)",
         "  Boolean arrays:       #{define_directive} NAME_<index>   (one per true element)",
         "  Integer arrays:       #{define_directive} NAME_<value>   (one per unique element, sorted)",
@@ -157,9 +158,11 @@ module UdbGen
 
     sig { params(lines: T::Array[String]).void }
     def emit_extension_defines(lines)
-      ext_names = cfg_arch.implemented_extension_versions.map(&:name).uniq.sort
-      ext_names.each do |name|
-        lines << "#{define_directive} #{name.upcase}_SUPPORTED"
+      ext_versions = cfg_arch.implemented_extension_versions.sort_by { |ev| ev.name.upcase }
+      ext_versions.each do |ext_ver|
+        lines << "#{define_directive} #{ext_ver.name.upcase}_SUPPORTED"
+        versioned_name = "#{ext_ver.name.upcase}#{ext_ver.version_spec.to_rvi_s.upcase}"
+        lines << "#{define_directive} #{versioned_name}_SUPPORTED"
       end
     end
 
@@ -176,6 +179,7 @@ module UdbGen
           next
         when Integer
           lines << "#{define_directive} #{name} #{value}"
+          lines << "#{define_directive} #{name}_#{value}"
         when String
           lines << "#{define_directive} #{name}_#{sanitize_to_identifier(value)}"
         when Array

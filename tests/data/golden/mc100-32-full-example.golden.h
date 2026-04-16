@@ -5,8 +5,9 @@
  * Config: MC100-32-Full
  *
  * Define conventions:
+ *   Extensions:           #define NAME_SUPPORTED and #define NAMEverPver_SUPPORTED
  *   Boolean params:       #define NAME           (present when true, absent when false)
- *   Integer params:       #define NAME value
+ *   Integer params:       #define NAME value     and #define NAME_value
  *   Enum (string) params: #define NAME_VALUE     (value sanitized to uppercase identifier)
  *   Boolean arrays:       #define NAME_<index>   (one per true element)
  *   Integer arrays:       #define NAME_<value>   (one per unique element, sorted)
@@ -21,36 +22,54 @@
 
 /* Implemented extensions */
 #define C_SUPPORTED
+#define C2P0_SUPPORTED
 #define I_SUPPORTED
+#define I2P1_SUPPORTED
 #define M_SUPPORTED
+#define M2P0_SUPPORTED
 #define SM_SUPPORTED
+#define SM1P11P0_SUPPORTED
 #define SMRNMI_SUPPORTED
+#define SMRNMI1P0_SUPPORTED
 #define ZCA_SUPPORTED
+#define ZCA1P0_SUPPORTED
 #define ZICNTR_SUPPORTED
+#define ZICNTR2P0_SUPPORTED
 #define ZICSR_SUPPORTED
+#define ZICSR2P0_SUPPORTED
 
 /* Configuration parameters */
 #define ARCH_ID_VALUE 1
+#define ARCH_ID_VALUE_1
 #define IMP_ID_VALUE 0
+#define IMP_ID_VALUE_0
 #define MARCHID_IMPLEMENTED
 #define MIMPID_IMPLEMENTED
 #define MISALIGNED_LDST
 #define MISALIGNED_LDST_EXCEPTION_PRIORITY_LOW
 #define MISALIGNED_MAX_ATOMICITY_GRANULE_SIZE 4
+#define MISALIGNED_MAX_ATOMICITY_GRANULE_SIZE_4
 #define MISALIGNED_SPLIT_STRATEGY_SEQUENTIAL_BYTES
 #define MISA_CSR_IMPLEMENTED
 #define MTVAL_WIDTH 32
+#define MTVAL_WIDTH_32
 #define MTVEC_ACCESS_RW
 #define MTVEC_BASE_ALIGNMENT_DIRECT 4
+#define MTVEC_BASE_ALIGNMENT_DIRECT_4
 #define MTVEC_BASE_ALIGNMENT_VECTORED 4
+#define MTVEC_BASE_ALIGNMENT_VECTORED_4
 #define MTVEC_ILLEGAL_WRITE_BEHAVIOR_RETAIN
 #define MTVEC_MODES_0
 #define MTVEC_MODES_1
 #define MXLEN 32
+#define MXLEN_32
 #define M_MODE_ENDIANNESS_LITTLE
 #define NUM_PMP_ENTRIES 0
+#define NUM_PMP_ENTRIES_0
 #define PHYS_ADDR_WIDTH 32
+#define PHYS_ADDR_WIDTH_32
 #define PMA_GRANULARITY 12
+#define PMA_GRANULARITY_12
 #define PRECISE_SYNCHRONOUS_EXCEPTIONS
 #define REPORT_ENCODING_IN_MTVAL_ON_ILLEGAL_INSTRUCTION
 #define REPORT_VA_IN_MTVAL_ON_BREAKPOINT
@@ -67,6 +86,8 @@
 #define TRAP_ON_UNIMPLEMENTED_CSR
 #define TRAP_ON_UNIMPLEMENTED_INSTRUCTION
 #define VENDOR_ID_BANK 1
+#define VENDOR_ID_BANK_1
 #define VENDOR_ID_OFFSET 1
+#define VENDOR_ID_OFFSET_1
 
 #endif /* UDB_CFG_MC100_32_FULL_H */
