@@ -80,20 +80,3 @@ namespace :test do
     end
   end
 end
-
-CFG_HEADERS_GOLDEN_DIR = UDB_GEN_ROOT / "test" / "data" / "golden"
-CFG_HEADERS_GEN_DIR = ($root || UDB_GEN_ROOT) / "gen" / "cfg_headers"
-CFG_HEADERS_TEST_CONFIG = "mc100-32-full-example"
-
-directory CFG_HEADERS_GEN_DIR.to_s
-
-namespace :chore do
-  desc "Update golden cfg header files"
-  task :update_golden_cfg_headers => CFG_HEADERS_GEN_DIR.to_s do
-    repo_root = ($root || (UDB_GEN_ROOT / ".." / ".." / "..").realpath)
-    sh "#{repo_root}/bin/udb-gen cfg-c-header -c #{CFG_HEADERS_TEST_CONFIG} -o #{CFG_HEADERS_GEN_DIR}/#{CFG_HEADERS_TEST_CONFIG}.h"
-    sh "#{repo_root}/bin/udb-gen cfg-svh-header -c #{CFG_HEADERS_TEST_CONFIG} -o #{CFG_HEADERS_GEN_DIR}/#{CFG_HEADERS_TEST_CONFIG}.svh"
-    cp "#{CFG_HEADERS_GEN_DIR}/#{CFG_HEADERS_TEST_CONFIG}.h", "#{CFG_HEADERS_GOLDEN_DIR}/#{CFG_HEADERS_TEST_CONFIG}.golden.h"
-    cp "#{CFG_HEADERS_GEN_DIR}/#{CFG_HEADERS_TEST_CONFIG}.svh", "#{CFG_HEADERS_GOLDEN_DIR}/#{CFG_HEADERS_TEST_CONFIG}.golden.svh"
-  end
-end

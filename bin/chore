@@ -111,6 +111,7 @@ gen_subcmd_usage() {
   echo "  vscode-idl:    Generate tools/vscode/idl/syntaxes/idl.tmLanguage.json"
   echo "  regress:       Generate .github/workflows/regress.yml"
   echo "  ruby-type-def: Generate Ruby type signatutres"
+  echo "  cfg-headers:   Generate golden cfg header files for regression testing"
   echo "  xqci           Generate Xqci spec used for Golden regressions"
   echo ""
 }
@@ -348,6 +349,7 @@ do_gen_all() {
   do_gen_gem_versions
   do_ruby_type_def all
   do_gen_xqci_golden
+  do_gen_cfg_header_golden
 }
 
 #
@@ -379,7 +381,22 @@ do_gen_xqci_golden() {
 }
 
 #
-# Install new Ruby gems and optionally update container tag
+# Generate golden cfg header files (C and SystemVerilog) for regression testing
+#
+do_gen_cfg_header_golden() {
+  source_setup
+  echo "Generating golden cfg header files"
+  local cfg="mc100-32-full-example"
+  local gen_dir="${UDB_ROOT}/gen/cfg_headers"
+  local golden_dir="${UDB_ROOT}/tools/ruby-gems/udb-gen/test/data/golden"
+  mkdir -p "$gen_dir" "$golden_dir"
+  $RUBY "${UDB_ROOT}/tools/ruby-gems/udb-gen/bin/udb-gen" cfg-c-header -c "$cfg" -o "${gen_dir}/${cfg}.h"
+  $RUBY "${UDB_ROOT}/tools/ruby-gems/udb-gen/bin/udb-gen" cfg-svh-header -c "$cfg" -o "${gen_dir}/${cfg}.svh"
+  cp "${gen_dir}/${cfg}.h" "${golden_dir}/${cfg}.golden.h"
+  cp "${gen_dir}/${cfg}.svh" "${golden_dir}/${cfg}.golden.svh"
+}
+
+#
 # Args: $1 - update_tag ("yes" to increment container tag, "no" otherwise)
 # Returns: 0 on success, exits with 1 on error
 #
@@ -665,6 +682,10 @@ case "$subcommand" in
         ;;
       xqci )
         do_gen_xqci_golden
+        exit 0
+        ;;
+      cfg-headers )
+        do_gen_cfg_header_golden
         exit 0
         ;;
       ruby-type-def )
