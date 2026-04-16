@@ -1,7 +1,7 @@
 # Copyright (c) Jordan Carlin, Harvey Mudd College.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
-# typed: true
+# typed: false
 # frozen_string_literal: true
 
 require "fileutils"
@@ -13,12 +13,13 @@ require "udb/obj/extension"
 
 module UdbGen
   # Shared logic for generating config header files across languages (C, SystemVerilog, etc.).
-  # Including classes must define the language-specific syntax methods listed below.
+  # Including classes must include TTY::Exit and extend SubcommandWithCommonOptions,
+  # which provides cfg_arch, params, parse, help, and exit_with.
   module CfgHeaderBase
     extend T::Sig
     extend T::Helpers
 
-    interface!
+    abstract!
 
     # The preprocessor define directive, e.g. "#define" or "`define"
     sig { abstract.returns(String) }
