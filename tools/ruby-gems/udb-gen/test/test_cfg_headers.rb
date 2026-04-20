@@ -38,7 +38,7 @@ class TestCfgHeaders < Minitest::Test
     golden = File.read(GOLDEN_DIR / "#{TEST_CONFIG}.golden.h")
     assert_equal golden, output,
       "C header output does not match golden file. " \
-      "If this is expected, update the golden file with: ./do chore:update_golden_cfg_headers"
+      "If this is expected, update the golden file with: ./bin/chore gen cfg-headers"
   end
 
   def test_cfg_svh_header_matches_golden
@@ -48,6 +48,6 @@ class TestCfgHeaders < Minitest::Test
     golden = File.read(GOLDEN_DIR / "#{TEST_CONFIG}.golden.svh")
     assert_equal golden, output,
       "SystemVerilog header output does not match golden file. " \
-      "If this is expected, update the golden file with: ./do chore:update_golden_cfg_headers"
+      "If this is expected, update the golden file with: ./bin/chore gen cfg-headers"
   end
 end

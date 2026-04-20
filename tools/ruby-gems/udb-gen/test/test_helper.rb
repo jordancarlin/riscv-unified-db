@@ -6,6 +6,7 @@
 
 require "simplecov"
 require "simplecov-cobertura"
+require "pathname"
 
 UDB_GEN_ROOT = (Pathname.new(__dir__) / "..").realpath
 
