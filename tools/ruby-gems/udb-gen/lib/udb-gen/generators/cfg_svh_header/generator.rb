@@ -48,6 +48,9 @@ module UdbGen
     sig { override.returns(String) }
     def define_directive = "`define"
 
+    sig { override.returns(String) }
+    def command_name = NAME
+
     sig { override.params(guard_name: String).returns(String) }
     def guard_begin(guard_name) = "`ifndef #{guard_name}"
 

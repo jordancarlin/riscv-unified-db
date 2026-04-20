@@ -18,13 +18,20 @@ class TestCfgHeaders < Minitest::Test
   GOLDEN_DIR = Pathname.new(__dir__) / "data" / "golden"
   TEST_CONFIG = "mc100-32-full-example"
 
+  module GeneratorTestHelper
+    def configure_for_test(resolver:, cfg:)
+      @resolver = resolver
+      parse(["--cfg", cfg])
+      self
+    end
+  end
+
   def setup
     @gen_dir = Dir.mktmpdir
     @resolver = Udb::Resolver.new(
       Udb.repo_root,
       gen_path_override: Pathname.new(@gen_dir)
     )
-    @cfg_arch = @resolver.cfg_arch_for(TEST_CONFIG)
   end
 
   def teardown
@@ -33,7 +40,7 @@ class TestCfgHeaders < Minitest::Test
 
   def test_cfg_c_header_matches_golden
     gen = UdbGen::GenCfgCHeaderOptions.new
-    gen.instance_variable_set(:@cfg_arch, @cfg_arch)
+    gen.extend(GeneratorTestHelper).configure_for_test(resolver: @resolver, cfg: TEST_CONFIG)
     output = gen.generate_header
     golden = File.read(GOLDEN_DIR / "#{TEST_CONFIG}.golden.h")
     assert_equal golden, output,
@@ -43,7 +50,7 @@ class TestCfgHeaders < Minitest::Test
 
   def test_cfg_svh_header_matches_golden
     gen = UdbGen::GenCfgSvhHeaderOptions.new
-    gen.instance_variable_set(:@cfg_arch, @cfg_arch)
+    gen.extend(GeneratorTestHelper).configure_for_test(resolver: @resolver, cfg: TEST_CONFIG)
     output = gen.generate_header
     golden = File.read(GOLDEN_DIR / "#{TEST_CONFIG}.golden.svh")
     assert_equal golden, output,
