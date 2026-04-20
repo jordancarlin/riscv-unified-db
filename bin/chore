@@ -349,7 +349,7 @@ do_gen_all() {
   do_gen_gem_versions
   do_ruby_type_def all
   do_gen_xqci_golden
-  do_gen_cfg_header_golden
+  do_gen_cfg_headers_golden
 }
 
 #
@@ -383,7 +383,7 @@ do_gen_xqci_golden() {
 #
 # Generate golden cfg header files (C and SystemVerilog) for regression testing
 #
-do_gen_cfg_header_golden() {
+do_gen_cfg_headers_golden() {
   source_setup
   echo "Generating golden cfg header files"
   local cfg="mc100-32-full-example"
@@ -685,7 +685,7 @@ case "$subcommand" in
         exit 0
         ;;
       cfg-headers )
-        do_gen_cfg_header_golden
+        do_gen_cfg_headers_golden
         exit 0
         ;;
       ruby-type-def )

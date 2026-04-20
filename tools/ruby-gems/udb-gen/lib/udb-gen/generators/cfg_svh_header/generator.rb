@@ -48,11 +48,11 @@ module UdbGen
     sig { override.returns(String) }
     def define_directive = "`define"
 
-    sig { override.returns(String) }
-    def guard_directive = "`ifndef"
+    sig { override.params(guard_name: String).returns(String) }
+    def guard_begin(guard_name) = "`ifndef #{guard_name}"
 
     sig { override.params(guard_name: String).returns(String) }
-    def end_guard(guard_name) = "`endif // #{guard_name}"
+    def guard_end(guard_name) = "`endif // #{guard_name}"
 
     sig { override.returns(String) }
     def guard_suffix = "_SVH"

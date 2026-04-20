@@ -23,13 +23,13 @@ module UdbGen
     sig { abstract.returns(String) }
     def define_directive; end
 
-    # The conditional guard directive, e.g. "#ifndef" or "`ifndef"
-    sig { abstract.returns(String) }
-    def guard_directive; end
+    # The begin-guard line, e.g. "#ifndef NAME" or "`ifndef NAME"
+    sig { abstract.params(guard_name: String).returns(String) }
+    def guard_begin(guard_name); end
 
     # The end-guard line, e.g. "#endif /* NAME */" or "`endif // NAME"
     sig { abstract.params(guard_name: String).returns(String) }
-    def end_guard(guard_name); end
+    def guard_end(guard_name); end
 
     # Guard name suffix, e.g. "_H" or "_SVH"
     sig { abstract.returns(String) }
@@ -78,7 +78,7 @@ module UdbGen
 
       lines.concat(header_comment(convention_lines))
       lines << ""
-      lines << "#{guard_directive} #{guard_name}"
+      lines << guard_begin(guard_name)
       lines << "#{define_directive} #{guard_name}"
 
       lines << ""
@@ -94,7 +94,7 @@ module UdbGen
       emit_param_defines(lines)
 
       lines << ""
-      lines << end_guard(guard_name)
+      lines << guard_end(guard_name)
       lines << ""
 
       lines.join("\n")
