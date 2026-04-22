@@ -6,7 +6,7 @@
 // Define conventions:
 //   Extensions:           `define NAME_SUPPORTED and `define NAMEverPver_SUPPORTED
 //   Boolean params:       `define UDB_NAME           (present when true, absent when false)
-//   Integer params:       `define UDB_NAME value     and `define UDB_NAME_value
+//   Integer params:       `define UDB_NAME value     and `define UDB_NAME_<value>
 //   Enum (string) params: `define UDB_NAME_VALUE     (value sanitized to uppercase identifier)
 //   Boolean arrays:       `define UDB_NAME_<index>   (one per true element)
 //   Integer arrays:       `define UDB_NAME_<value>   (one per unique element, sorted)

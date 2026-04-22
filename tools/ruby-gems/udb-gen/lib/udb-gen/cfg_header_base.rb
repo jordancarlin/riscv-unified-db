@@ -89,7 +89,7 @@ module UdbGen
         "Define conventions:",
         "  Extensions:           #{define_directive} NAME_SUPPORTED and #{define_directive} NAMEverPver_SUPPORTED",
         "  Boolean params:       #{define_directive} UDB_NAME           (present when true, absent when false)",
-        "  Integer params:       #{define_directive} UDB_NAME value     and #{define_directive} UDB_NAME_value",
+        "  Integer params:       #{define_directive} UDB_NAME value     and #{define_directive} UDB_NAME_<value>",
         "  Enum (string) params: #{define_directive} UDB_NAME_VALUE     (value sanitized to uppercase identifier)",
         "  Boolean arrays:       #{define_directive} UDB_NAME_<index>   (one per true element)",
         "  Integer arrays:       #{define_directive} UDB_NAME_<value>   (one per unique element, sorted)",
@@ -223,7 +223,7 @@ module UdbGen
           lines << "#{define_directive} #{name}_#{v}"
         end
       elsif value.all? { |v| v.is_a?(String) }
-        value.map { |v| sanitize_to_identifier(v) }.uniq.each do |sanitized|
+        value.map { |v| sanitize_to_identifier(v) }.uniq.sort.each do |sanitized|
           lines << "#{define_directive} #{name}_#{sanitized}"
         end
       end

@@ -4,13 +4,19 @@
 # typed: false
 # frozen_string_literal: true
 
-require "simplecov"
-require "simplecov-cobertura"
 require "pathname"
+
+SIMPLECOV_AVAILABLE = begin
+  require "simplecov"
+  require "simplecov-cobertura"
+  true
+rescue LoadError
+  false
+end
 
 UDB_GEN_ROOT = (Pathname.new(__dir__) / "..").realpath
 
-unless SimpleCov.running
+if SIMPLECOV_AVAILABLE && !SimpleCov.running
   SimpleCov.start do
     enable_coverage :branch
     add_filter "/test/"
