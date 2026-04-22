@@ -20,7 +20,7 @@ module UdbGen
 
     sig { void }
     def initialize
-      super(name: NAME, desc: "Generate a SystemVerilog header with `defines from a fully configured UDB config")
+      super(name: NAME, desc: "Generate a SystemVerilog header with `define directives from a fully configured UDB config")
     end
 
     usage \
