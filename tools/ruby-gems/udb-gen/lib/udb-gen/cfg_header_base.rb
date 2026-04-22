@@ -88,12 +88,12 @@ module UdbGen
         "",
         "Define conventions:",
         "  Extensions:           #{define_directive} NAME_SUPPORTED and #{define_directive} NAMEverPver_SUPPORTED",
-        "  Boolean params:       #{define_directive} NAME           (present when true, absent when false)",
-        "  Integer params:       #{define_directive} NAME value     and #{define_directive} NAME_value",
-        "  Enum (string) params: #{define_directive} NAME_VALUE     (value sanitized to uppercase identifier)",
-        "  Boolean arrays:       #{define_directive} NAME_<index>   (one per true element)",
-        "  Integer arrays:       #{define_directive} NAME_<value>   (one per unique element, sorted)",
-        "  String arrays:        #{define_directive} NAME_<VALUE>   (one per unique element, sanitized)"
+        "  Boolean params:       #{define_directive} UDB_NAME           (present when true, absent when false)",
+        "  Integer params:       #{define_directive} UDB_NAME value     and #{define_directive} UDB_NAME_value",
+        "  Enum (string) params: #{define_directive} UDB_NAME_VALUE     (value sanitized to uppercase identifier)",
+        "  Boolean arrays:       #{define_directive} UDB_NAME_<index>   (one per true element)",
+        "  Integer arrays:       #{define_directive} UDB_NAME_<value>   (one per unique element, sorted)",
+        "  String arrays:        #{define_directive} UDB_NAME_<VALUE>   (one per unique element, sanitized)"
       ]
 
       lines.concat(header_comment(convention_lines))
@@ -195,18 +195,19 @@ module UdbGen
       return if pv.empty?
 
       pv.sort_by { |k, _| k }.each do |name, value|
+        prefixed = "UDB_#{name}"
         case value
         when true
-          lines << "#{define_directive} #{name}"
+          lines << "#{define_directive} #{prefixed}"
         when false
           next
         when Integer
-          lines << "#{define_directive} #{name} #{format_integer(value)}"
-          lines << "#{define_directive} #{name}_#{value}"
+          lines << "#{define_directive} #{prefixed} #{format_integer(value)}"
+          lines << "#{define_directive} #{prefixed}_#{value}"
         when String
-          lines << "#{define_directive} #{name}_#{sanitize_to_identifier(value)}"
+          lines << "#{define_directive} #{prefixed}_#{sanitize_to_identifier(value)}"
         when Array
-          emit_array_param(lines, name, value)
+          emit_array_param(lines, prefixed, value)
         end
       end
     end

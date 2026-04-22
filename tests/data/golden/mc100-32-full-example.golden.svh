@@ -5,12 +5,12 @@
 //
 // Define conventions:
 //   Extensions:           `define NAME_SUPPORTED and `define NAMEverPver_SUPPORTED
-//   Boolean params:       `define NAME           (present when true, absent when false)
-//   Integer params:       `define NAME value     and `define NAME_value
-//   Enum (string) params: `define NAME_VALUE     (value sanitized to uppercase identifier)
-//   Boolean arrays:       `define NAME_<index>   (one per true element)
-//   Integer arrays:       `define NAME_<value>   (one per unique element, sorted)
-//   String arrays:        `define NAME_<VALUE>   (one per unique element, sanitized)
+//   Boolean params:       `define UDB_NAME           (present when true, absent when false)
+//   Integer params:       `define UDB_NAME value     and `define UDB_NAME_value
+//   Enum (string) params: `define UDB_NAME_VALUE     (value sanitized to uppercase identifier)
+//   Boolean arrays:       `define UDB_NAME_<index>   (one per true element)
+//   Integer arrays:       `define UDB_NAME_<value>   (one per unique element, sorted)
+//   String arrays:        `define UDB_NAME_<VALUE>   (one per unique element, sanitized)
 
 `ifndef UDB_CFG_MC100_32_FULL_SVH
 `define UDB_CFG_MC100_32_FULL_SVH
@@ -37,55 +37,55 @@
 `define ZICSR2P0_SUPPORTED
 
 // Configuration parameters
-`define ARCH_ID_VALUE 32'h1
-`define ARCH_ID_VALUE_1
-`define IMP_ID_VALUE 32'h0
-`define IMP_ID_VALUE_0
-`define MARCHID_IMPLEMENTED
-`define MIMPID_IMPLEMENTED
-`define MISALIGNED_LDST
-`define MISALIGNED_LDST_EXCEPTION_PRIORITY_LOW
-`define MISALIGNED_MAX_ATOMICITY_GRANULE_SIZE 32'h4
-`define MISALIGNED_MAX_ATOMICITY_GRANULE_SIZE_4
-`define MISALIGNED_SPLIT_STRATEGY_SEQUENTIAL_BYTES
-`define MISA_CSR_IMPLEMENTED
-`define MTVAL_WIDTH 32'h20
-`define MTVAL_WIDTH_32
-`define MTVEC_ACCESS_RW
-`define MTVEC_BASE_ALIGNMENT_DIRECT 32'h4
-`define MTVEC_BASE_ALIGNMENT_DIRECT_4
-`define MTVEC_BASE_ALIGNMENT_VECTORED 32'h4
-`define MTVEC_BASE_ALIGNMENT_VECTORED_4
-`define MTVEC_ILLEGAL_WRITE_BEHAVIOR_RETAIN
-`define MTVEC_MODES_0
-`define MTVEC_MODES_1
-`define MXLEN 32'h20
-`define MXLEN_32
-`define M_MODE_ENDIANNESS_LITTLE
-`define NUM_PMP_ENTRIES 32'h0
-`define NUM_PMP_ENTRIES_0
-`define PHYS_ADDR_WIDTH 32'h20
-`define PHYS_ADDR_WIDTH_32
-`define PMA_GRANULARITY 32'hC
-`define PMA_GRANULARITY_12
-`define PRECISE_SYNCHRONOUS_EXCEPTIONS
-`define REPORT_ENCODING_IN_MTVAL_ON_ILLEGAL_INSTRUCTION
-`define REPORT_VA_IN_MTVAL_ON_BREAKPOINT
-`define REPORT_VA_IN_MTVAL_ON_INSTRUCTION_ACCESS_FAULT
-`define REPORT_VA_IN_MTVAL_ON_INSTRUCTION_MISALIGNED
-`define REPORT_VA_IN_MTVAL_ON_LOAD_ACCESS_FAULT
-`define REPORT_VA_IN_MTVAL_ON_LOAD_MISALIGNED
-`define REPORT_VA_IN_MTVAL_ON_STORE_AMO_ACCESS_FAULT
-`define REPORT_VA_IN_MTVAL_ON_STORE_AMO_MISALIGNED
-`define TRAP_ON_EBREAK
-`define TRAP_ON_ECALL_FROM_M
-`define TRAP_ON_ILLEGAL_WLRL
-`define TRAP_ON_RESERVED_INSTRUCTION
-`define TRAP_ON_UNIMPLEMENTED_CSR
-`define TRAP_ON_UNIMPLEMENTED_INSTRUCTION
-`define VENDOR_ID_BANK 32'h1
-`define VENDOR_ID_BANK_1
-`define VENDOR_ID_OFFSET 32'h1
-`define VENDOR_ID_OFFSET_1
+`define UDB_ARCH_ID_VALUE 32'h1
+`define UDB_ARCH_ID_VALUE_1
+`define UDB_IMP_ID_VALUE 32'h0
+`define UDB_IMP_ID_VALUE_0
+`define UDB_MARCHID_IMPLEMENTED
+`define UDB_MIMPID_IMPLEMENTED
+`define UDB_MISALIGNED_LDST
+`define UDB_MISALIGNED_LDST_EXCEPTION_PRIORITY_LOW
+`define UDB_MISALIGNED_MAX_ATOMICITY_GRANULE_SIZE 32'h4
+`define UDB_MISALIGNED_MAX_ATOMICITY_GRANULE_SIZE_4
+`define UDB_MISALIGNED_SPLIT_STRATEGY_SEQUENTIAL_BYTES
+`define UDB_MISA_CSR_IMPLEMENTED
+`define UDB_MTVAL_WIDTH 32'h20
+`define UDB_MTVAL_WIDTH_32
+`define UDB_MTVEC_ACCESS_RW
+`define UDB_MTVEC_BASE_ALIGNMENT_DIRECT 32'h4
+`define UDB_MTVEC_BASE_ALIGNMENT_DIRECT_4
+`define UDB_MTVEC_BASE_ALIGNMENT_VECTORED 32'h4
+`define UDB_MTVEC_BASE_ALIGNMENT_VECTORED_4
+`define UDB_MTVEC_ILLEGAL_WRITE_BEHAVIOR_RETAIN
+`define UDB_MTVEC_MODES_0
+`define UDB_MTVEC_MODES_1
+`define UDB_MXLEN 32'h20
+`define UDB_MXLEN_32
+`define UDB_M_MODE_ENDIANNESS_LITTLE
+`define UDB_NUM_PMP_ENTRIES 32'h0
+`define UDB_NUM_PMP_ENTRIES_0
+`define UDB_PHYS_ADDR_WIDTH 32'h20
+`define UDB_PHYS_ADDR_WIDTH_32
+`define UDB_PMA_GRANULARITY 32'hC
+`define UDB_PMA_GRANULARITY_12
+`define UDB_PRECISE_SYNCHRONOUS_EXCEPTIONS
+`define UDB_REPORT_ENCODING_IN_MTVAL_ON_ILLEGAL_INSTRUCTION
+`define UDB_REPORT_VA_IN_MTVAL_ON_BREAKPOINT
+`define UDB_REPORT_VA_IN_MTVAL_ON_INSTRUCTION_ACCESS_FAULT
+`define UDB_REPORT_VA_IN_MTVAL_ON_INSTRUCTION_MISALIGNED
+`define UDB_REPORT_VA_IN_MTVAL_ON_LOAD_ACCESS_FAULT
+`define UDB_REPORT_VA_IN_MTVAL_ON_LOAD_MISALIGNED
+`define UDB_REPORT_VA_IN_MTVAL_ON_STORE_AMO_ACCESS_FAULT
+`define UDB_REPORT_VA_IN_MTVAL_ON_STORE_AMO_MISALIGNED
+`define UDB_TRAP_ON_EBREAK
+`define UDB_TRAP_ON_ECALL_FROM_M
+`define UDB_TRAP_ON_ILLEGAL_WLRL
+`define UDB_TRAP_ON_RESERVED_INSTRUCTION
+`define UDB_TRAP_ON_UNIMPLEMENTED_CSR
+`define UDB_TRAP_ON_UNIMPLEMENTED_INSTRUCTION
+`define UDB_VENDOR_ID_BANK 32'h1
+`define UDB_VENDOR_ID_BANK_1
+`define UDB_VENDOR_ID_OFFSET 32'h1
+`define UDB_VENDOR_ID_OFFSET_1
 
 `endif // UDB_CFG_MC100_32_FULL_SVH
