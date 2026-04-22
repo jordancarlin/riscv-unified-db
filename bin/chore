@@ -380,12 +380,25 @@ do_gen_cfg_headers_golden() {
   echo "Generating golden cfg header files"
   local cfg="mc100-32-full-example"
   local gen_dir="${UDB_ROOT}/gen/cfg_headers"
-  local golden_dir="${UDB_ROOT}/tools/ruby-gems/udb-gen/test/data/golden"
+  local golden_dir="${UDB_ROOT}/tests/data/golden"
+  if [ $fail_on_change -eq 1 ]; then
+    local sha_before_h sha_before_svh
+    sha_before_h=$(sha256sum "${golden_dir}/${cfg}.golden.h")
+    sha_before_svh=$(sha256sum "${golden_dir}/${cfg}.golden.svh")
+  fi
   mkdir -p "$gen_dir" "$golden_dir"
   $RUBY "${UDB_ROOT}/tools/ruby-gems/udb-gen/bin/udb-gen" cfg-c-header -c "$cfg" -o "${gen_dir}/${cfg}.h"
   $RUBY "${UDB_ROOT}/tools/ruby-gems/udb-gen/bin/udb-gen" cfg-svh-header -c "$cfg" -o "${gen_dir}/${cfg}.svh"
   cp "${gen_dir}/${cfg}.h" "${golden_dir}/${cfg}.golden.h"
   cp "${gen_dir}/${cfg}.svh" "${golden_dir}/${cfg}.golden.svh"
+  if [ $fail_on_change -eq 1 ]; then
+    local sha_after_h sha_after_svh
+    sha_after_h=$(sha256sum "${golden_dir}/${cfg}.golden.h")
+    sha_after_svh=$(sha256sum "${golden_dir}/${cfg}.golden.svh")
+    if [ "$sha_before_h" != "$sha_after_h" ] || [ "$sha_before_svh" != "$sha_after_svh" ]; then
+      exit 1
+    fi
+  fi
 }
 
 #
