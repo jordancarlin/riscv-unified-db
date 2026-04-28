@@ -15,9 +15,6 @@
 `ifndef UDB_CFG_MC100_32_FULL_SVH
 `define UDB_CFG_MC100_32_FULL_SVH
 
-// Derived ISA widths
-`define XLEN32
-
 // Implemented extensions
 `define C_SUPPORTED
 `define C2P0_SUPPORTED

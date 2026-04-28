@@ -102,10 +102,6 @@ module UdbGen
       lines << "#{define_directive} #{guard_name}"
 
       lines << ""
-      lines << section_comment("Derived ISA widths")
-      emit_width_defines(lines)
-
-      lines << ""
       lines << section_comment("Implemented extensions")
       emit_extension_defines(lines)
 
@@ -155,28 +151,6 @@ module UdbGen
     sig { params(str: String).returns(String) }
     def sanitize_to_identifier(str)
       str.upcase.gsub(/[^A-Z0-9]/, "_").gsub(/_+/, "_").gsub(/\A_|_\z/, "")
-    end
-
-    sig { returns(T.nilable(Integer)) }
-    def derive_flen
-      if cfg_arch.ext?(:Q)
-        128
-      elsif cfg_arch.ext?(:D)
-        64
-      elsif cfg_arch.ext?(:F)
-        32
-      else
-        nil
-      end
-    end
-
-    sig { params(lines: T::Array[String]).void }
-    def emit_width_defines(lines)
-      mxlen = cfg_arch.mxlen
-      lines << "#{define_directive} XLEN#{mxlen}" unless mxlen.nil?
-
-      flen = derive_flen
-      lines << "#{define_directive} FLEN#{flen}" unless flen.nil?
     end
 
     sig { params(lines: T::Array[String]).void }
