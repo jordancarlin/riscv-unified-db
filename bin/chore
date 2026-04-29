@@ -397,30 +397,38 @@ do_gen_xqci_golden() {
 
 #
 # Generate golden cfg header files (C and SystemVerilog) for regression testing
+# Returns: 0 on success, 1 if files changed (when fail_on_change=1)
 #
 do_gen_cfg_headers_golden() {
   echo "Generating golden cfg header files"
   local cfg="mc100-32-full-example"
   local gen_dir="${UDB_ROOT}/gen/cfg_headers"
-  local golden_dir="${UDB_ROOT}/tests/data/golden"
-  if [ $fail_on_change -eq 1 ]; then
-    local sha_before_h sha_before_svh
-    sha_before_h=$(sha256sum "${golden_dir}/${cfg}.golden.h")
-    sha_before_svh=$(sha256sum "${golden_dir}/${cfg}.golden.svh")
+  local golden_dir="${UDB_ROOT}/tests/golden"
+
+  # Capture the state before generation
+  local before_hash=""
+  if [ -d "$golden_dir" ]; then
+    before_hash=$(find "$golden_dir" -type f \( -name "${cfg}.golden.h" -o -name "${cfg}.golden.svh" \) -exec md5sum {} \; | sort | md5sum | awk '{print $1}')
   fi
+
   mkdir -p "$gen_dir" "$golden_dir"
   "${UDB_ROOT}"/bin/bundle exec udb-gen cfg-c-header -c "$cfg" -o "${gen_dir}/${cfg}.h"
   "${UDB_ROOT}"/bin/bundle exec udb-gen cfg-svh-header -c "$cfg" -o "${gen_dir}/${cfg}.svh"
   cp "${gen_dir}/${cfg}.h" "${golden_dir}/${cfg}.golden.h"
   cp "${gen_dir}/${cfg}.svh" "${golden_dir}/${cfg}.golden.svh"
+
   if [ $fail_on_change -eq 1 ]; then
-    local sha_after_h sha_after_svh
-    sha_after_h=$(sha256sum "${golden_dir}/${cfg}.golden.h")
-    sha_after_svh=$(sha256sum "${golden_dir}/${cfg}.golden.svh")
-    if [ "$sha_before_h" != "$sha_after_h" ] || [ "$sha_before_svh" != "$sha_after_svh" ]; then
-      exit 1
+    local after_hash=""
+    if [ -d "$golden_dir" ]; then
+      after_hash=$(find "$golden_dir" -type f \( -name "${cfg}.golden.h" -o -name "${cfg}.golden.svh" \) -exec md5sum {} \; | sort | md5sum | awk '{print $1}')
+    fi
+
+    if [ "$before_hash" != "$after_hash" ]; then
+      echo "[ERROR]: Golden cfg header files changed during generation"
+      return 1
     fi
   fi
+  return 0
 }
 
 #
@@ -622,7 +630,8 @@ case "$subcommand" in
         ;;
       cfg-headers )
         do_gen_cfg_headers_golden
-        exit 0
+        exit_code=$?
+        exit $exit_code
         ;;
       ruby-type-def )
         while getopts ":h" opt; do # Go through the options

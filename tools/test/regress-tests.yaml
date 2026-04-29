@@ -178,7 +178,7 @@ tests:
   regress-cfg-headers:
     ci_stage: pr
     tags:
-      - unit
+      - smoke
     test:
       - name: Generate cfg header golden files
         run: ./bin/chore gen -f cfg-headers

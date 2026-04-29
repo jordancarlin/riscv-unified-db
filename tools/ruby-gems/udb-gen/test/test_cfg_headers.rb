@@ -15,7 +15,7 @@ require "udb-gen/generators/cfg_c_header/generator"
 require "udb-gen/generators/cfg_svh_header/generator"
 
 class TestCfgHeaders < Minitest::Test
-  GOLDEN_DIR = Pathname.new(__dir__).parent.parent.parent.parent / "tests" / "data" / "golden"
+  GOLDEN_DIR = Pathname.new(__dir__).parent.parent.parent.parent / "tests" / "golden"
   TEST_CONFIG = "mc100-32-full-example"
 
   module GeneratorTestHelper
