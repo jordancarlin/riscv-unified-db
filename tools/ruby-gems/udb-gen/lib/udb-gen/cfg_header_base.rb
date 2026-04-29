@@ -136,7 +136,7 @@ module UdbGen
       header = generate_header
 
       if params[:output].nil?
-        $stdout.puts header
+        $stdout.write(header)
       else
         FileUtils.mkdir_p(params[:output].dirname)
         File.write(params[:output], header)

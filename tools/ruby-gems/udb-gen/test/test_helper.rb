@@ -16,7 +16,7 @@ end
 
 UDB_GEN_ROOT = (Pathname.new(__dir__) / "..").realpath
 
-if SIMPLECOV_AVAILABLE && !SimpleCov.running
+if SIMPLECOV_AVAILABLE && !SimpleCov.running && ENV["COVERAGE"] != "0"
   SimpleCov.start do
     enable_coverage :branch
     add_filter "/test/"
