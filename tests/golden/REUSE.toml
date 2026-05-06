@@ -2,6 +2,8 @@ version = 1
 
 # Computer-generated files that are checked in
 [[annotations]]
-path = ["**"]
-SPDX-FileCopyrightText = "Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries."
-SPDX-License-Identifier = "BSD-3-Clause-Clear"
+path = [
+    "*",
+]
+SPDX-FileCopyrightText = "NONE"
+SPDX-License-Identifier = "CC0-1.0"
