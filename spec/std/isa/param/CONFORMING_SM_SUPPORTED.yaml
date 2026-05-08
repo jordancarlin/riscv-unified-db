@@ -5,7 +5,7 @@
 
 $schema: param_schema.json#
 kind: parameter
-name: CONFORMING_SM_SUPPORTED
+name: STANDARD_SM_SUPPORTED
 long_name: |
   Whether or not a spec-compliant machine mode (`Sm` extension) is implemented
 description: |

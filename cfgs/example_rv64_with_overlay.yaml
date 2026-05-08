@@ -305,7 +305,7 @@ params:
   MISA_CSR_IMPLEMENTED: true
 
   # Whether or not a spec-compliant machine mode (`Sm`) is implemented.
-  CONFORMING_SM_SUPPORTED: true
+  STANDARD_SM_SUPPORTED: true
 
   # when true, *tval is written with the virtual PC of the EBREAK instruction (same information as *epc)
   # when false, *tval is written with 0 on an EBREAK instruction
