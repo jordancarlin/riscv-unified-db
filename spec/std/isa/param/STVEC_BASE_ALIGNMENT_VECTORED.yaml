@@ -13,8 +13,8 @@ definedBy:
     - extension:
         name: S
     - param:
-        name: STVEC_MODE_VECTORED
-        equal: true
+        name: STVEC_MODES
+        includes: 1
         reason: Only relevant when vectored mode is supported
 description: |
   Minimum alignment of the base pointer when `stvec.MODE` is Vectored. Because
