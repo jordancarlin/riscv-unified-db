@@ -93,5 +93,11 @@ schema:
     ]
 
 requirements:
-  idl(): |
-    (MXLEN == 32) -> MTVEC_BASE_ALIGNMENT_DIRECT <= 2147483648;
+  if:
+    param:
+      name: MXLEN
+      equal: 32
+  then:
+    param:
+      name: MTVEC_BASE_ALIGNMENT_DIRECT
+      lessThanOrEqual: 2147483648

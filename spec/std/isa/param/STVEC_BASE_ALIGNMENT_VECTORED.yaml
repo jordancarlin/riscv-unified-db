@@ -90,5 +90,11 @@ schema:
     ]
 
 requirements:
-  idl(): |
-    $array_includes?(SXLEN, 32) -> STVEC_BASE_ALIGNMENT_VECTORED <= 2147483648;
+  if:
+    param:
+      name: SXLEN
+      includes: 32
+  then:
+    param:
+      name: STVEC_BASE_ALIGNMENT_VECTORED
+      lessThanOrEqual: 2147483648
