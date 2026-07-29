@@ -413,7 +413,7 @@ def _resolve(obj, obj_path, obj_file_path, doc_obj, arch_root, do_checks, compil
         # now parent_obj is the child and obj is the parent
         # merge them
         keys = list(obj.keys())
-        for key in parent_obj.keys():
+        for key in parent_obj:
             if keys.count(key) == 0:
                 keys.append(key)
 
@@ -481,7 +481,7 @@ def _resolve(obj, obj_path, obj_file_path, doc_obj, arch_root, do_checks, compil
             del obj["$remove"]
 
         if compile_idl:
-            idl_keys = {key for key in obj.keys() if key.endswith("()")}
+            idl_keys = {key for key in obj if key.endswith("()")}
             for key in idl_keys:
                 if key.endswith("()") and obj[key]:
                     r = (
@@ -544,13 +544,13 @@ def merge_file(
     if not os.path.exists(arch_path) and (overlay_path == None or not os.path.exists(overlay_path)):
         # neither exist
         if not os.path.exists(merge_path):
-            raise "Script error: no path exists"
+            raise RuntimeError("Script error: no path exists")
 
         # remove the merged file
         os.remove(merge_path)
     elif overlay_path == None or not os.path.exists(overlay_path):
         if arch_path == None:
-            raise "Must supply with arch_path or overlay_path"
+            raise ValueError("Must supply with arch_path or overlay_path")
 
         # no overlay, just copy arch
         if not os.path.exists(merge_path) or (
@@ -559,7 +559,7 @@ def merge_file(
             shutil.copyfile(os.path.join(arch_dir, rel_path), merge_path)
     elif not os.path.exists(arch_path):
         if overlay_path == None or not os.path.exists(overlay_path):
-            raise "Must supply with arch_path or overlay_path"
+            raise ValueError("Must supply with arch_path or overlay_path")
 
         # no arch, just copy overlay
         if not os.path.exists(merge_path) or (

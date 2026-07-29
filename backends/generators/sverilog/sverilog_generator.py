@@ -109,10 +109,10 @@ def generate_sverilog(instructions, csrs, causes, output_file):
 
         # Find the maximum name length for alignment
         max_instr_len = max(
-            (len(format_instruction_name(name)) for name in instructions.keys()),
+            (len(format_instruction_name(name)) for name in instructions),
             default=0,
         )
-        max_csr_len = max((len(format_csr_name(csrs[addr])) for addr in csrs.keys()), default=0)
+        max_csr_len = max((len(format_csr_name(csrs[addr])) for addr in csrs), default=0)
         max_cause_len = max((len(format_cause_name(name)) for _, name in causes), default=0)
         max_len = max(max_instr_len, max_csr_len)
 

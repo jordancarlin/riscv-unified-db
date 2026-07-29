@@ -50,8 +50,3 @@ extend-select = [
     "RUF104", # ruff: unmatched suppression comment
     "W191",   # pycodestyle: tabs in indentation
 ]
-ignore = [
-    "B016",   # cannot raise a literal (legacy code)
-    "SIM102", # nested if statements (readability preference)
-    "SIM118", # use key in dict instead of key in dict.keys()
-]

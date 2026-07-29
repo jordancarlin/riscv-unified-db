@@ -284,14 +284,14 @@ def load_instructions(root_dir, enabled_extensions, include_all=False, target_ar
 
             # Check if the instruction specifies a base architecture constraint
             base = data.get("base")
-            if base is not None:
-                if (base == 32 and target_arch not in ["RV32", "BOTH"]) or (
-                    base == 64 and target_arch not in ["RV64", "BOTH"]
-                ):
-                    msg = f"Skipping {name} because it requires base {base} which doesn't match target arch {target_arch}"
-                    LOGGER.debug(msg)
-                    encoding_filtered += 1
-                    continue
+            if base is not None and (
+                (base == 32 and target_arch not in ["RV32", "BOTH"])
+                or (base == 64 and target_arch not in ["RV64", "BOTH"])
+            ):
+                msg = f"Skipping {name} because it requires base {base} which doesn't match target arch {target_arch}"
+                LOGGER.debug(msg)
+                encoding_filtered += 1
+                continue
 
             # Determine which encoding to use based on target architecture
             if isinstance(encoding, dict):
