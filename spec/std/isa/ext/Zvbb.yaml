@@ -16,5 +16,5 @@ versions:
     ratification_date: 2023-09
     requirements:
       extension:
-        name: Zvkb
+        name: Zve32x
         version: "= 1.0.0"

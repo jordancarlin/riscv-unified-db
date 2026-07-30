@@ -11,7 +11,9 @@ description: |
   Reverses the byte order within each element of vector register vs2, storing results in vector register vd according to mask vm. Similar to vrev8.v but with different encoding.
 definedBy:
   extension:
-    name: Zvbb
+    anyOf:
+      - name: Zvbb
+      - name: Zvkb
 assembly: vd, vs2, vm
 encoding:
   match: 010010------01000010-----1010111
