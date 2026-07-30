@@ -158,8 +158,6 @@ mandatory_extensions:
   version: "~> 1.0.0"
 - name: Zvfhmin
   version: "~> 1.0"
-- name: Zvkb
-  version: "~> 1.0.0"
 - name: Zvkt
   version: "~> 1.0"
 - name: Zvl128b
