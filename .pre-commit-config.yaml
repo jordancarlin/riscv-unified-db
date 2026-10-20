@@ -5,6 +5,7 @@ exclude: ^docs/ruby/ # All generated code
 default_language_version:
   python: python3.12
 default_stages: [pre-commit]
+default_install_hook_types: [pre-commit, commit-msg, post-commit]
 
 repos:
   # Rust-native builtin hooks (no clone, no Python venv).
@@ -37,6 +38,13 @@ repos:
         exclude: tools/vscode/\.vscode/launch\.json|doc/tsconfig\.json # Uses JSONC (comments)
       - id: check-yaml
         priority: 30
+      - id: check-signed-commit
+        priority: 30
+        stages: [post-commit]
+      - id: check-commit-trailers
+        priority: 30
+        args: [--require=Signed-off-by]
+        stages: [commit-msg]
 
   # Formatters touching distinct file extensions (parallel).
   - repo: https://github.com/rbubley/mirrors-prettier
